@@ -1,0 +1,304 @@
+html {
+    overflow-y: scroll;
+}
+
+body {
+	background-color: #4d5a71;
+	font-family: Montserrat, Helvetica, sans-serif;
+	font-weight: 200;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	margin-top: 0;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+main {
+	background-color: #FBFBFB;
+	padding-bottom: 60px;
+	padding-top: 60px;
+}
+
+nav .container-fluid,
+main .container-fluid,
+footer .container-fluid {
+	max-width: 1500px;
+}
+
+main section {
+	background-color: #fff;
+    -webkit-box-shadow: 16px 16px 47px 2px rgba(0,0,0,.07);
+    box-shadow: 16px 16px 47px 2px rgba(0,0,0,.07);
+    padding: 30px !important;
+}
+
+main section h1 {
+    padding-bottom: 15px;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+main section form label {
+    font-weight: 500;
+}
+
+main section form button,
+main section form button.btn-signup {
+    min-width: 100px;
+    float: right;
+    background-color: #f29400;
+    border-color: #f2e5d6;
+    color: #fff;
+}
+
+.overlaybox {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    opacity: 0.8;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+main section#walletTransactions,
+main section#walletPassword {
+    margin-top: 50px !important;
+}
+
+main section#walletAccount .btn {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+main section#walletOverview #withdrawform input#address {
+    width: 70%;
+    float: left;
+}
+main section#walletOverview #withdrawform input#amount {
+    width: 28%;
+    float: right;
+}
+
+footer {
+    border-top: 5px solid #f2e5d6;
+	background-color: #4d5a71;
+	min-height: 150px;
+    padding-top: 30px;
+    color: #f9f9f9;
+    font-size: 90%;
+}
+footer p {
+    padding-top: 10px;
+}
+footer p.copyright {
+    font-size: 80%;
+}
+footer ul#footerlinks {
+    list-style-type: none;
+    padding-left: 0;
+}
+footer ul#footerlinks li {
+    line-height: 25px;
+}
+footer ul#footerlinks li a {
+    color: #f9f9f9;
+}
+
+.langselect {
+	padding-right: 8px;
+}
+
+.dropdown-menu>li {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+nav[role="headerbar"] {
+    /*background-image: url('../img/');*/
+    background-color: #313A4B;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 5px solid #f29400;
+}
+nav[role="headerbar"] .langselect {
+	float: right;
+}
+
+nav[role="headerbar"] .navbar-brand,
+nav[role="headerbar"] .navbar-right {
+	color: #ffffff;
+    min-height: 80px;
+    line-height: 80px;
+    padding: 0;
+}
+
+nav[role="navigation"] {
+	margin-bottom: 0;
+    border-radius: 0;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>button.btn-link,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav li:hover a,
+.navbar-default .navbar-nav>.active>a:focus {
+	background: none;
+	color: #F7921D;
+	border-bottom: 1px solid #f29400;
+}
+.navbar-default .navbar-nav>.active>a {
+    font-weight: 500;
+}
+a, .btn-link,
+a:hover, .btn-link:hover {
+    color: #F7921D;
+}
+
+
+@media (max-width: 767px) {
+    nav .navbar-nav .open .dropdown-menu > li > a {
+        color: #ffffff;
+    }
+    nav .navbar-nav .open .dropdown-menu > li > a:hover, nav .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #ffbbbc;
+    }
+    nav .navbar-nav .open .dropdown-menu > .active > a, nav .navbar-nav .open .dropdown-menu > .active > a:hover, nav .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #ffbbbc;
+        background-color: #b9392b;
+    }
+    #txlist td:nth-of-type(1), #txlist td:nth-of-type(2), #txlist td:nth-of-type(5), #txlist td:nth-of-type(6) {
+        display: none;
+    }
+
+    #donate {
+        display: none;
+    }
+
+    main section#walletOverview #withdrawform input#address {
+        width: 100%;
+        float: none;
+    }
+    main section#walletOverview #withdrawform input#amount {
+        width: 100%;
+        float: none;
+    }
+}
+
+@media (max-width: 992px) {
+    section#signupSection {
+        margin-top: 25px;
+    }
+
+    main {
+        padding-bottom: 30px;
+        padding-top: 30px;
+    }
+
+    #walletSend {
+        margin-top: 20px;
+    }
+
+}
+
+
+/**
+ * Loader
+ */
+
+.browser-screen-loading-content {
+  text-align: center;
+  height: 2em;
+  max-width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+.loading-dots {
+  margin-left: -1.5em;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-animation: loading-dots-fadein .5s linear forwards;
+  -moz-animation: loading-dots-fadein .5s linear forwards;
+  -o-animation: loading-dots-fadein .5s linear forwards;
+  -ms-animation: loading-dots-fadein .5s linear forwards;
+  animation: loading-dots-fadein .5s linear forwards;
+}
+.loading-dots i {
+  width: .5em;
+  height: .5em;
+  display: inline-block;
+  vertical-align: middle;
+  background: #e0e0e0;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  margin: 0 .125em;
+  -webkit-animation: loading-dots-middle-dots .5s linear infinite;
+  -moz-animation: loading-dots-middle-dots .5s linear infinite;
+  -o-animation: loading-dots-middle-dots .5s linear infinite;
+  -ms-animation: loading-dots-middle-dots .5s linear infinite;
+  animation: loading-dots-middle-dots .5s linear infinite;
+}
+.loading-dots.dark-gray i {
+  background: #707070;
+}
+.loading-dots i:first-child {
+  -webkit-animation: loading-dots-first-dot .5s infinite;
+  -moz-animation: loading-dots-first-dot .5s linear infinite;
+  -o-animation: loading-dots-first-dot .5s linear infinite;
+  -ms-animation: loading-dots-first-dot .5s linear infinite;
+  animation: loading-dots-first-dot .5s linear infinite;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transform: translate(-1em);
+  -moz-transform: translate(-1em);
+  -o-transform: translate(-1em);
+  -ms-transform: translate(-1em);
+  transform: translate(-1em);
+}
+.loading-dots i:last-child {
+  -webkit-animation: loading-dots-last-dot .5s linear infinite;
+  -moz-animation: loading-dots-last-dot .5s linear infinite;
+  -o-animation: loading-dots-last-dot .5s linear infinite;
+  -ms-animation: loading-dots-last-dot .5s linear infinite;
+  animation: loading-dots-last-dot .5s linear infinite;
+}
+
+
+@-moz-keyframes loading-dots-fadein{100%{opacity:1;-ms-filter:none;filter:none}}
+@-webkit-keyframes loading-dots-fadein{100%{opacity:1;-ms-filter:none;filter:none}}
+@-o-keyframes loading-dots-fadein{100%{opacity:1;-ms-filter:none;filter:none}}
+@keyframes loading-dots-fadein{100%{opacity:1;-ms-filter:none;filter:none}}
+
+@-moz-keyframes loading-dots-first-dot{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em);opacity:1;-ms-filter:none;filter:none}}
+@-webkit-keyframes loading-dots-first-dot{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em);opacity:1;-ms-filter:none;filter:none}}
+@-o-keyframes loading-dots-first-dot{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em);opacity:1;-ms-filter:none;filter:none}}
+@keyframes loading-dots-first-dot{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em);opacity:1;-ms-filter:none;filter:none}}
+
+
+@-moz-keyframes loading-dots-middle-dots{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em)}}
+@-webkit-keyframes loading-dots-middle-dots{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em)}}
+@-o-keyframes loading-dots-middle-dots{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em)}}
+@keyframes loading-dots-middle-dots{100%{-webkit-transform:translate(1em);-moz-transform:translate(1em);-o-transform:translate(1em);-ms-transform:translate(1em);transform:translate(1em)}}
+
+
+@-moz-keyframes loading-dots-last-dot{100%{-webkit-transform:translate(2em);-moz-transform:translate(2em);-o-transform:translate(2em);-ms-transform:translate(2em);transform:translate(2em);opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0)}}
+@-webkit-keyframes loading-dots-last-dot{100%{-webkit-transform:translate(2em);-moz-transform:translate(2em);-o-transform:translate(2em);-ms-transform:translate(2em);transform:translate(2em);opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0)}}
+@-o-keyframes loading-dots-last-dot{100%{-webkit-transform:translate(2em);-moz-transform:translate(2em);-o-transform:translate(2em);-ms-transform:translate(2em);transform:translate(2em);opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0)}}
+@keyframes loading-dots-last-dot{100%{-webkit-transform:translate(2em);-moz-transform:translate(2em);-o-transform:translate(2em);-ms-transform:translate(2em);transform:translate(2em);opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0)}}
