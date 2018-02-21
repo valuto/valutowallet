@@ -17,6 +17,7 @@ $route->put('lang', 'Controllers\LanguageController@update')->middleware('auth')
 
 $route->put('auth/password', 'Controllers\Auth\PasswordController@update')->middleware('auth');
 $route->post('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@store')->middleware('auth');
+$route->put('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@update')->middleware('auth');
 $route->delete('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@destroy')->middleware('auth');
 
 $route->post('wallet/newaddress', 'Controllers\WalletController@newaddress')->middleware('auth');
@@ -24,8 +25,8 @@ $route->post('wallet/withdraw', 'Controllers\WalletController@withdraw')->middle
 
 $route->get('qrcode', 'Controllers\QrcodeController@show')->middleware('auth');
 
-$route->post('auth/login', 'Controllers\Auth\LoginController@store');
+$route->post('auth/login', 'Controllers\Auth\LoginController@store')->middleware('recaptcha');
 $route->post('auth/logout', 'Controllers\Auth\LoginController@destroy');
-$route->post('auth/register', 'Controllers\Auth\RegisterController@store');
+$route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware('recaptcha');
 $route->get('', 'Controllers\HomeController@index');
 $route->get('index.php', 'Controllers\HomeController@redirect');

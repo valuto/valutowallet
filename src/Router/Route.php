@@ -44,7 +44,7 @@ class Route
      * Constructor
      * 
      * @param Request $request
-     * @param Middleware $middlewar
+     * @param Middleware $middleware
      */
     public function __construct(Request $request = null, Middleware $middleware = null)
     {
@@ -115,11 +115,13 @@ class Route
      */
     public function resolve()
     {
-        if ($this->currentAction()) {
+        $action = $this->currentAction();
+
+        if ($action) {
 
             // Possible extend: set headers etc. here
 
-            echo $this->callControllerMethod($this->currentAction());
+            echo $this->callControllerMethod($action);
 
         } else {
 

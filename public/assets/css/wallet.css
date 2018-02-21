@@ -85,6 +85,10 @@ main section#walletOverview #withdrawform input#amount {
     float: right;
 }
 
+main section#walletAccount #verifytwofactor {
+    display: none;
+}
+
 footer {
     border-top: 5px solid #f2e5d6;
 	background-color: #4d5a71;
@@ -166,6 +170,20 @@ a:hover, .btn-link:hover {
     color: #F7921D;
 }
 
+.btn.btn-half-width:nth-of-type(1) {
+    width: 48% !important;
+    float: left;
+}
+
+.btn.btn-half-width:nth-of-type(2) {
+    width: 48% !important;
+    float: right;
+}
+
+#verifytwofactor-msg {
+    font-weight: bold;
+}
+
 
 @media (max-width: 767px) {
     nav .navbar-nav .open .dropdown-menu > li > a {
@@ -192,6 +210,11 @@ a:hover, .btn-link:hover {
     }
     main section#walletOverview #withdrawform input#amount {
         width: 100%;
+        float: none;
+    }
+
+    .btn.btn-half-width {
+        width: 100% !important;
         float: none;
     }
 }

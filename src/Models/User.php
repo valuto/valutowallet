@@ -239,31 +239,33 @@ class User {
 		}
 	}
 
-	function enableauth()
+    /**
+     * Enable 2FA on user.
+     * 
+     * @param  string   $secret
+     * @return boolean
+     */
+    function enableauth($secret)
+    {
+        $id = $_SESSION['user_id'];
 
-	{
+        if ($id) {  
+            return $this->mysqli->query("UPDATE users SET authused=1, secret='".$secret."' WHERE id=" . $id);
+        } else {
+            return false;
+        }
+    }
 
-		$id=$_SESSION['user_id'];
-		$secret=$this->createSecret();
-		$qrcode=$this->getQRCodeGoogleUrl('Wallet', $secret);
-		$oneCode = $this->getCode($secret);
+    function disauth()
+    {
+ 	    $id = $_SESSION['user_id'];
 
-		if (($id)) 
-		{  
-			$msg = "Secret Key: $secret *Please write this down and keep in a secure area*<br><img src='$qrcode' /><br>Please scan this with the Google Authenticator app on your mobile phone. This page will clear on refresh, please be careful.";
-			$this->mysqli->query("UPDATE users SET authused=1, secret='" . $secret . "' WHERE id=" . $id); return "$msg";
-		}
-	}
-
-      function disauth()
-              {
-     		 $id=$_SESSION['user_id'];
-    		  if (($id))
-     		 {
-			$msg = "Two Factor Auth has been disabled for your account and will no longer be required when you sign in.";
-			$this->mysqli->query("UPDATE users SET authused=0, secret='' WHERE id=" . $id); return "$msg";
-	         }
-              }
+		if ($id) {
+            $msg = "Two Factor Auth has been disabled for your account and will no longer be required when you sign in.";
+            $this->mysqli->query("UPDATE users SET authused=0, secret=NULL WHERE id=" . $id);
+            return "$msg";
+        }
+    }
 
    function adminDeleteAccount($id)
         {

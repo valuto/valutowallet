@@ -120,22 +120,60 @@ if ($admin)
     <h1><?php echo lang('WALLET_ACCOUNT_HEADLINE'); ?></h1>
     <div class="row">
       <div class="col-md-4">
-        <p id="2factorauth-msg"></p>
-        
         <p id="support-msg" style="display: none">
           Please contact support via email at <?= config('app', 'support') ?>
           <br />Support Key: <?= $_SESSION['user_supportpin'] ?>
         </p>
 
-        <form action="/auth/twofactorauth" method="POST" class="twofactor">
+        <?php if (!$twofactorenabled): ?>
+        <form action="/auth/twofactorauth" method="POST" class="twofactor" id="enabletwofactorform">
           <button type="submit" class="btn btn-default"><?php echo lang('WALLET_2FAON'); ?></button>
         </form>
-        <form action="/auth/twofactorauth" method="DELETE" class="twofactor">
+        <?php endif; ?>
+        
+        <?php if ($twofactorenabled): ?>
+        <form action="/auth/twofactorauth" method="DELETE" class="twofactor" id="disabletwofactorform">
           <button type="submit" class="btn btn-default"><?php echo lang('WALLET_2FAOFF'); ?></button>
         </form>
+        <?php endif; ?>
+
         <form action="#" method="POST" id="support-form">
           <button type="submit" class="btn btn-default"><?php echo lang('WALLET_SUPPORT'); ?></button>
         </form>
+
+      </div>
+      <div class="col-md-6">
+
+        <p id="twofactor-msg"></p>
+
+        <div id="verifytwofactor">
+
+            <h3>Step 1: Secret Key</h3>
+            <p style="font-weight: bold;" id="2factorauth-secret"></p>
+            <p style='color: red; font-weight: bold;'>* Please write this down and keep in a secure area *</p><br><br>
+
+            <h3>Step 2: Authenticator</h3>
+            <img src="" id="2factorauth-qrcode" /><br><br>
+            <p>Please scan this with the Google Authenticator app on your mobile phone. This page will clear on refresh, please be careful.</p><br><br>
+
+            <h3><?php echo lang('WALLET_2FAVERIFY_HEADLINE'); ?></h3>
+            <form action="/auth/twofactorauth" method="PUT" id="verifytwofactorform">
+                <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                <p><?php echo lang('WALLET_2FAVERIFY_DESC'); ?></p>
+                <p id="verifytwofactor-msg"></p>
+                <div class="form-group">
+                    <input type="checkbox" required="required" name="accept_secure_key" id="verifytwofactoraccept" placeholder="">
+                    <label for="verifytwofactoraccept"><?php echo lang('WALLET_2FACODE_ACCEPT_SECURE_KEY'); ?></label>
+                </div>
+                <div class="form-group">
+                    <label for="verifytwofactorcode"><?php echo lang('WALLET_2FACODE'); ?></label>
+                    <input type="text" class="form-control" name="code" id="verifytwofactorcode" placeholder="<?php echo lang('WALLET_2FACODE'); ?>">
+                </div>
+                <button type="button" class="btn btn-default btn-half-width" id="abortverifybtn"><?php echo lang('WALLET_2FAVERIFY_ABORT'); ?></button>
+                <button type="submit" class="btn btn-default btn-half-width" style="color: green"><?php echo lang('WALLET_2FAVERIFY'); ?></button>
+            </form>
+        </div>
+
       </div>
     </div>
   </section>
@@ -209,9 +247,8 @@ $(document).on('submit', '#withdrawform', function(e) {
             	$("#withdrawmsg").css("color", "red");
             	$("#withdrawmsg").show();
             }
-            if (json.newtoken)
-            {
-              $('input[name="token"]').val(json.newtoken);
+            if (json.newtoken) {
+                $('input[name="token"]').val(json.newtoken);
             }
         },
         error: function(jqXHR, textStatus, errorThrown) 
@@ -240,9 +277,8 @@ $(document).on('submit', '#newaddressform', function(e) {
             	$("#newaddressmsg").css("color", "red");
             	$("#newaddressmsg").show();
             }
-            if (json.newtoken)
-            {
-              $('input[name="token"]').val(json.newtoken);
+            if (json.newtoken) {
+                $('input[name="token"]').val(json.newtoken);
             }
         },
         error: function(jqXHR, textStatus, errorThrown) 
@@ -275,9 +311,8 @@ $(document).on('submit', '#pwdform', function(e)
                $("#pwdmsg").css("color", "red");
                $("#pwdmsg").show();
             }
-            if (json.newtoken)
-            {
-              $('input[name="token"]').val(json.newtoken);
+            if (json.newtoken) {
+                $('input[name="token"]').val(json.newtoken);
             }
         },
         error: function(jqXHR, textStatus, errorThrown) 
@@ -298,15 +333,90 @@ $(document).on('submit', '#support-form', function(e) {
 $(document).on('submit', 'form.twofactor', function(e) {
   e.preventDefault();
 
+  var $form = $(this);
+
   $.ajax({
-      url : $(this).attr("action"),
-      type: $(this).attr("method"),
-      data : $(this).serializeArray(),
-      success:function(data, textStatus, jqXHR) {
-        $('#2factorauth-msg').html(data); 
+      url : $form.attr("action"),
+      type: $form.attr("method"),
+      data: $form.serializeArray(),
+      success: function(data, textStatus, jqXHR) {
+        if ($form.is('#enabletwofactorform')) {
+            var json = $.parseJSON(data);
+            $('#2factorauth-secret').text(json.secret); 
+            $('#2factorauth-qrcode').attr('src', json.qrcode); 
+            $('#twofactor-msg').html('');
+            $('#verifytwofactor').fadeIn();
+        } else {
+            $('#verifytwofactor').hide();
+            $('#twofactor-msg').html(data);
+        }
       }
   });
 
+});
+
+$(document).on('click', '#abortverifybtn', function(e)
+{
+    $('#disabletwofactorform').submit();
+});
+
+$(document).on('submit', '#verifytwofactorform', function(e)
+{
+    console.log('verify two factor');
+
+    var postData = $(this).serializeArray();
+    var formURL = $(this).attr("action");
+
+    $.ajax({
+        url : formURL,
+        type: "PUT",
+        data : postData,
+        success: function(data, textStatus, jqXHR) 
+        {
+            var message;
+            var json = $.parseJSON(data);
+
+            if (json.success) {
+
+                $('#verifytwofactor-msg').text("<?php echo lang('WALLET_2FAVERIFY_SUCCESS'); ?>");
+                $('#verifytwofactor-msg').css('color', 'green').show();
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+
+            } else {
+
+                switch (json.error) {
+                    case 'VERIFY_NOT_SETUP':
+                        message = "<?php echo lang('WALLET_2FAVERIFY_ERROR_NOT_SETUP'); ?>";
+                        break;
+                    case 'VERIFY_INVALID_CODE':
+                        message = "<?php echo lang('WALLET_2FAVERIFY_ERROR_INVALID'); ?>";
+                        break;
+                    case 'VERIFY_INVALID_INPUT':
+                        message = "<?php echo lang('WALLET_2FAVERIFY_ERROR_INPUT'); ?>";
+                        break;
+                    default:
+                        message = 'An error occurred.';
+                }
+                $('#verifytwofactor-msg').text(message);
+                $('#verifytwofactor-msg').css('color', 'red').show();
+                $('#verifytwofactorcode').val('');
+            }
+
+            if (json.newtoken) {
+                $('input[name="token"]').val(json.newtoken);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) 
+        {
+            console.log('error', textStatus, errorThrown);
+            $('#verifytwofactor-msg').text('An error occurred. Please make sure your session is still active.');
+            $('#verifytwofactor-msg').show();
+        }
+    });
+
+    e.preventDefault();
 });
 
 function updateTables(json)

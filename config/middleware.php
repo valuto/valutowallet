@@ -6,7 +6,8 @@
 
 return [
 
-    'auth' => \Middlewares\Authenticate::class,
-    'admin' => \Middlewares\Administrator::class,
+    'auth'      => \Middlewares\Authenticate::class,
+    'admin'     => \Middlewares\Administrator::class,
+    'recaptcha' => \Middlewares\Recaptcha::class,
 
 ];

@@ -28,6 +28,7 @@ class DashboardController extends Controller
 
         $addressList     = $this->client->getAddressList($_SESSION['user_session']);
         $transactionList = $this->client->getTransactionList($_SESSION['user_session']);
+        $twofactorenabled = isset($_SESSION['user_2fa']) && $_SESSION['user_2fa'];
 
         include __DIR__ . "/../../view/header.php";
         include __DIR__ . "/../../view/wallet.php";

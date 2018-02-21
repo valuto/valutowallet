@@ -13,6 +13,6 @@ class HomeController extends Controller
 
     public function redirect()
     {
-        header('Location: /');
+        return redirect('');
     }
 }
