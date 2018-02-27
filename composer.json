@@ -6,5 +6,8 @@
         "files": [ 
             "src/helpers.php"
         ]
+    },
+    "require": {
+        "defuse/php-encryption": "^2.1"
     }
 }

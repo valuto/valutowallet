@@ -6,6 +6,7 @@ use Controllers\Controller;
 use Models\Flash;
 use Models\User;
 
+
 class TwoFactorAuthController extends Controller
 {
     /**
@@ -23,6 +24,7 @@ class TwoFactorAuthController extends Controller
     const VERIFY_NOT_SETUP     = 'VERIFY_NOT_SETUP';
     const VERIFY_INVALID_CODE  = 'VERIFY_INVALID_CODE';
     const VERIFY_INVALID_INPUT = 'VERIFY_INVALID_INPUT';
+    const VERIFY_INVALID_PASSWORD = 'VERIFY_INVALID_PASSWORD';
     const VERIFY_SUCCESSFUL    = 'VERIFY_SUCCESSFUL';
 
     /**
@@ -80,6 +82,13 @@ class TwoFactorAuthController extends Controller
         $user    = new User($this->db);
         $oneCode = (int)$user->getCode($_SESSION['secret_key_not_verified']);
 
+        if ( ! $user->verifyPasswordMatch($_POST['password'], $user->getUserByUsername($_SESSION['user_session']))) {
+            return json_encode([
+                'error' => self::VERIFY_INVALID_PASSWORD,
+                'newtoken' => $_SESSION['token'],
+            ]);
+        }
+
         if ($oneCode !== (int)$_POST['code']) {
             return json_encode([
                 'error' => self::VERIFY_INVALID_CODE,
@@ -89,7 +98,7 @@ class TwoFactorAuthController extends Controller
 
         if ($oneCode === (int)$_POST['code']) {
 
-            $user->enableauth($_SESSION['secret_key_not_verified']);
+            $user->enableauth($_SESSION['secret_key_not_verified'], $_POST['password']);
             $_SESSION['user_2fa'] = 1;
             unset($_SESSION['secret_key_not_verified']);
 

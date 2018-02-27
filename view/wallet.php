@@ -166,8 +166,12 @@ if ($admin)
                     <label for="verifytwofactoraccept"><?php echo lang('WALLET_2FACODE_ACCEPT_SECURE_KEY'); ?></label>
                 </div>
                 <div class="form-group">
+                    <label for="verifypassword"><?php echo lang('WALLET_2FAVERIFY_PASSWORD'); ?></label>
+                    <input type="password" required="required" class="form-control" name="password" id="verifypassword" placeholder="<?php echo lang('WALLET_2FAVERIFY_PASSWORD_PLACEHOLDER'); ?>">
+                </div>
+                <div class="form-group">
                     <label for="verifytwofactorcode"><?php echo lang('WALLET_2FACODE'); ?></label>
-                    <input type="text" class="form-control" name="code" id="verifytwofactorcode" placeholder="<?php echo lang('WALLET_2FACODE'); ?>">
+                    <input type="text" required="required" class="form-control" name="code" id="verifytwofactorcode" placeholder="<?php echo lang('WALLET_2FACODE'); ?>">
                 </div>
                 <button type="button" class="btn btn-default btn-half-width" id="abortverifybtn"><?php echo lang('WALLET_2FAVERIFY_ABORT'); ?></button>
                 <button type="submit" class="btn btn-default btn-half-width" style="color: green"><?php echo lang('WALLET_2FAVERIFY'); ?></button>
@@ -395,6 +399,9 @@ $(document).on('submit', '#verifytwofactorform', function(e)
                         break;
                     case 'VERIFY_INVALID_INPUT':
                         message = "<?php echo lang('WALLET_2FAVERIFY_ERROR_INPUT'); ?>";
+                        break;
+                    case 'VERIFY_INVALID_PASSWORD':
+                        message = "<?php echo lang('WALLET_2FAVERIFY_ERROR_INVALID_PASSWORD'); ?>";
                         break;
                     default:
                         message = 'An error occurred.';

@@ -2,6 +2,11 @@
 
 namespace Models;
 
+use Defuse\Crypto\KeyProtectedByPassword;
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
+use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+
 class User {
 
 	private $mysqli;
@@ -13,9 +18,36 @@ class User {
 
 	}
 
+    /**
+     * Verify that $password matches the users hashed password from the database.
+     * 
+     * @param  string  $password  the password to verify.
+     * @param  array   $user      the user data array.
+     * @return boolean
+     */
+    public function verifyPasswordMatch($password, $user)
+    {
+        // Old MD5
+        if (is_null($user['password']) && ($user['password_old_md5'] == md5(addslashes(strip_tags($password))))) {
+            return true;
 
+        // BCRYPT
+        } elseif (password_verify($password, $user['password'])) {
+            return true;
 
-	function logIn($username, $password)
+        // No password match
+        } else {
+            return false;
+        }
+    }
+
+    public function getUserByUsername($username)
+    {
+        $result = $this->mysqli->query("SELECT * FROM users WHERE username='" . $username . "'");
+        return $result->fetch_assoc();
+    }
+
+	public function logIn($username, $password)
 	{
 		if (empty($username) || empty($password))
 
@@ -27,28 +59,24 @@ class User {
 			$username = $this->mysqli->real_escape_string(strip_tags($username));
   		  	//$password = md5(addslashes(strip_tags($password	))); 
 			$auth = $this->mysqli->real_escape_string(	strip_tags(	$auth));
-    		$result	= $this->mysqli->query("SELECT * FROM users WHERE username='" . $username . "'");
-         	$user = $result->fetch_assoc();
-            $secret = $user['secret'];
-            $oneCode = $this->getCode($secret);
+    		$user = $this->getUserByUsername($username);
 
-            // Old MD5
-            if (is_null($user['password']) && ($user['password_old_md5'] == md5(addslashes(strip_tags($password))))) {
-                $passwordmatch = true;
-            // BCRYPT
-            } elseif (password_verify($password, $user['password'])) {
-                $passwordmatch = true;
-            // No password match
-            } else {
-                $passwordmatch = false;
+            if ($user['authused']) {
+                try {
+                    $oneCode = $this->get2faOneCode($user, $password);
+                } catch (WrongKeyOrModifiedCiphertextException $ex) {
+                    return 'Username, password or 2 factor is incorrect.';
+                }
             }
 
-            if ($user && $passwordmatch && ($user['locked'] == 0) && ($user['authused'] == 0)) {
+            $passwordmatch = $this->verifyPasswordMatch($password, $user);
+
+            if ($user && $passwordmatch && $user['locked'] == 0 && $user['authused'] == 0) {
                 return $user;
-        	} elseif (($user) && $passwordmatch && ($user['locked'] == 1)) {
+        	} elseif ($user && $passwordmatch && $user['locked'] == 1) {
     			$pin = $user['supportpin'];
         		return "Account is locked. Contact support for more information. $pin";
-            } elseif (($user) && $passwordmatch && ($user['locked'] == 0) && ($user['authused'] == 1 && ($oneCode == $_POST['auth'])))  {
+            } elseif ($user && $passwordmatch && $user['locked'] == 0 && ($user['authused'] == 1 && $oneCode == $_POST['auth']))  {
 			    return $user;
         	} else {
         		return "Username, password or 2 factor is incorrect";
@@ -58,7 +86,51 @@ class User {
 
 	}
 
+    /**
+     * Get 2fa one code.
+     * 
+     * @param  array  $user      the user data array.
+     * @param  string $password  the password in clear text to use for unlocking the secret.
+     * @return int               the one code.
+     */
+    protected function get2faOneCode($user, $password)
+    {
+        return $this->getCode($this->get2faSecret($user, $password));
+    }
 
+    /**
+     * Get 2fa secret.
+     * 
+     * @param  array  $user      the user data array.
+     * @param  string $password  the password in clear text to use for unlocking the secret.
+     * @return int               the one code.
+     */
+    protected function get2faSecret($user, $password)
+    {
+        if ($user['authused'] && is_null($user['secret_encrypted'])) {
+            return $user['secret'];
+        } elseif ($user['authused'] && ! is_null($user['secret_encrypted'])) {
+            return $this->decrypt2faSecret($user['secret_encrypted'], $password, $user);
+        }
+
+        return $oneCode;
+    }
+
+    /**
+     * Decrypt 2fa secret from database.
+     * 
+     * @param  string $secretEncrypted the encryptet secret.
+     * @param  string $password        the password in clear text to use for unlocking the secret.
+     * @param  array  $user            the user data array.
+     * @return string                  the clear text secret.
+     */
+    protected function decrypt2faSecret($secretEncrypted, $password, $user)
+    {
+        $protectedKey = KeyProtectedByPassword::loadFromAsciiSafeString($user['protected_key']);
+        $userKey = $protectedKey->unlockKey($password);
+
+        return Crypto::decrypt($user['secret_encrypted'], $userKey);
+    }
 
 	function add($username, $password, $confirmPassword)
 	{
@@ -154,19 +226,30 @@ class User {
                         'cost' => 12,
                     ]);
 
-					$result = $this->mysqli->query("UPDATE users SET password='" . $password . "',password_old_md5=NULL,supportpin='" . rand(10000,99999) . "' WHERE id=" . $user['id']);
+                    if ($user['authused']) {
+                        $secret = $this->get2faSecret($user, $oldPassword);
+                    }
 
-					if ($result)
+                    $stmt = $this->mysqli->prepare("UPDATE users SET password=?,password_old_md5=NULL,supportpin='" . rand(10000,99999) . "' WHERE id=?");
 
-					{
+                    if (!$stmt) {
+                        return false;
+                    }
 
-						return true;
+                    $stmt->bind_param('si', $password, $user['id']);
+                    $result = $stmt->execute();
+                    $stmt->close();
 
-					} else {
-
+					if (!$result) {
 						return "Some sort of error occured.";
+                    }
 
-					}
+                    // Update encrypted 2fa secret.
+                    if ($user['authused']) {
+                        $this->enableauth($secret, $newPassword);
+                    }
+
+                    return true;
 
 				}
 
@@ -243,17 +326,33 @@ class User {
      * Enable 2FA on user.
      * 
      * @param  string   $secret
+     * @param  string   $password the user account password in clear text.
      * @return boolean
      */
-    function enableauth($secret)
+    function enableauth($secret, $password)
     {
         $id = $_SESSION['user_id'];
 
-        if ($id) {  
-            return $this->mysqli->query("UPDATE users SET authused=1, secret='".$secret."' WHERE id=" . $id);
-        } else {
+        if (!$id) {
             return false;
         }
+
+        $protectedKey        = KeyProtectedByPassword::createRandomPasswordProtectedKey($password);
+        $protectedKeyEncoded = $protectedKey->saveToAsciiSafeString();
+        $userKey             = $protectedKey->unlockKey($password);
+        $secretEncrypted     = Crypto::encrypt($secret, $userKey);
+
+        $stmt = $this->mysqli->prepare('UPDATE users SET protected_key=?, authused=1, secret=NULL, secret_encrypted=? WHERE id=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('ssi', $protectedKeyEncoded, $secretEncrypted, $id);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
     }
 
     function disauth()
@@ -262,7 +361,17 @@ class User {
 
 		if ($id) {
             $msg = "Two Factor Auth has been disabled for your account and will no longer be required when you sign in.";
-            $this->mysqli->query("UPDATE users SET authused=0, secret=NULL WHERE id=" . $id);
+
+            $stmt = $this->mysqli->prepare('UPDATE users SET authused=0, secret=NULL, protected_key=NULL, secret_encrypted=NULL WHERE id=?');
+
+            if (!$stmt) {
+                return false;
+            }
+
+            $stmt->bind_param('i', $id);
+            $result = $stmt->execute();
+            $stmt->close();
+
             return "$msg";
         }
     }
