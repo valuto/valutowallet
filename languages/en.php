@@ -49,7 +49,7 @@ return [
     'WALLET_2FAVERIFY_ERROR_NOT_SETUP' => 'Two factor authentication has not been enabled on your account.',
     'WALLET_2FAVERIFY_SUCCESS' => 'Two factor authentication is now enabled. This page will refresh in a moment.',
     'WALLET_2FAVERIFY_ABORT' => 'Abort',
-    'WALLET_2FACODE' => 'Code',
+    'WALLET_2FACODE' => 'Authenticator Code',
     'WALLET_2FACODE_ACCEPT_SECURE_KEY' => 'I acknowledge that I have a copy of the secret key.',
     'WALLET_2FAVERIFY_HEADLINE' => 'Step 3: Verify',
     'WALLET_2FAVERIFY' => 'Verify',
