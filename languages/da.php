@@ -103,7 +103,7 @@ return [
     'WALLET_UPDATEPW_INCORRECT_PW' => 'Adgangskoden er forkert.',
     'WALLET_2FA_DISAUTH_COMPLETED' => 'Tofaktorgodkendelse er nu deaktiveret og vil ikke længere være påkrævet ved login.',
     'WALLET_NOTICE' => 'OBS',
-    'WALLET_DONATE_LINK' => 'Dontér til Valutowallet\'s ejer!',
+    'WALLET_DONATE_LINK' => 'Donér til Valutowallet\'s ejer!',
     'WALLET_DONATE_INFO' => 'Indtast beløbet du vil donerer og tryk på <strong>Send</strong>',
     'WALLET_WITHDRAW_CONFIRM' => 'Er du sikker på, at du vil sende :amount VLU til ":address"?\n\nDenne handling kan ikke fortrydes.',
     'WALLET_FRONTEND_AJAX_ERROR' => 'En fejl opstod. Tjek om din session stadig er aktiv.',
