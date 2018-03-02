@@ -25,7 +25,7 @@ class RegisterController extends Controller
         } else {
             $username                    = $mysqli->real_escape_string(strip_tags($_POST['username']));
             $_SESSION['user_session']    = $username;
-            $_SESSION['user_supportpin'] = "Please relogin for Support Key";
+            $_SESSION['user_supportpin'] = lang('WALLET_REGISTER_RELOGIN_FOR_SUPPORTPIN');
             
             Flash::save('showdisclaimer', true);
             redirect('');

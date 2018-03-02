@@ -45,7 +45,16 @@
 						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="language-selector">
 							<li data-value="en">
 								<span class="lang-sm lang-lbl" lang="en"></span>
-							</li><!--
+							</li>
+                            <li data-value="es">
+                                <span class="lang-sm lang-lbl" lang="es"></span>
+                            </li>
+                            <li data-value="de">
+                                <span class="lang-sm lang-lbl" lang="de"></span>
+                            </li>
+                            <li data-value="da">
+                                <span class="lang-sm lang-lbl" lang="da"></span>
+                            </li><!--
 							<li data-value="grc">
 								<span class="lang-sm lang-lbl" lang="el"></span>
 							</li>
@@ -61,9 +70,6 @@
 							<li data-value="hin">
 								<span class="lang-sm lang-lbl" lang="hi"></span>
 							</li>
-							<li data-value="spa">
-								<span class="lang-sm lang-lbl" lang="es"></span>
-							</li>
 							<li data-value="tgl">
 								<span class="lang-sm"></span>Tagalog
 							</li>
@@ -75,9 +81,6 @@
 							</li>
 							<li data-value="fra">
 								<span class="lang-sm lang-lbl" lang="fr"></span>
-							</li>
-							<li data-value="deu">
-								<span class="lang-sm lang-lbl" lang="de"></span>
 							</li>
 							<li data-value="tur">
 								<span class="lang-sm lang-lbl" lang="tr"></span>

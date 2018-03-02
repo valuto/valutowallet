@@ -13,7 +13,7 @@ $route->post('admin/info', 'Controllers\AdminController@info')->middleware(['aut
 
 $route->get('', 'Controllers\DashboardController@index')->middleware('auth');
 $route->post('accept-disclaimer', 'Controllers\DashboardController@acceptDisclaimer')->middleware('auth');
-$route->put('lang', 'Controllers\LanguageController@update')->middleware('auth');
+$route->put('lang', 'Controllers\LanguageController@update');
 
 $route->put('auth/password', 'Controllers\Auth\PasswordController@update')->middleware('auth');
 $route->post('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@store')->middleware('auth');

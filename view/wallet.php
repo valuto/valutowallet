@@ -6,7 +6,7 @@ if ($error && !empty($error['message'])) {
 
 <?php if(\Models\Flash::has('promptupdatepw')): ?>
 <section class="col-md-12" id="walletMessage" style="margin-bottom: 50px !important; background-color: #f29400; color: #fff;">
-    <strong>Notice</strong>&nbsp;&nbsp;Please update your password from the "Account" tab
+    <strong><?php echo lang('WALLET_NOTICE'); ?></strong>&nbsp;&nbsp;Please update your password from the "Account" tab
 </section>
 <?php endif; ?>
 
@@ -26,7 +26,7 @@ if ($admin)
 <div id="vueapp">
 
   <section class="col-md-12" id="walletOverview" v-show="showtab === 'wallet'">
-    <h1><button type="button" class="btn btn-link" style="float: right;" id="donate">Donate to <?=config('app', 'fullname')?>wallet's owner!</button><?php echo lang('WALLET_OVERVIEW_HEADLINE'); ?></h1>
+    <h1><button type="button" class="btn btn-link" style="float: right;" id="donate"><?php echo lang('WALLET_DONATE_LINK'); ?></button><?php echo lang('WALLET_OVERVIEW_HEADLINE'); ?></h1>
 
     <div class="row">
     <div class="col-md-4">
@@ -37,8 +37,8 @@ if ($admin)
     <!-- Send funds -->  
     <div class="col-md-8" id="walletSend">
     <p><strong><?php echo lang('WALLET_SEND'); ?></strong></p>
-    <p id="donateinfo" style="display: none;">Type the amount you want to donate and click <strong>Send</strong></p>
-    <p id="withdrawinfo">Type the receiver address, the amount you want to send and click <strong>Send</strong></p>
+    <p id="donateinfo" style="display: none;"><?php echo lang('WALLET_DONATE_INFO'); ?></p>
+    <p id="withdrawinfo"><?php echo lang('WALLET_WITHDRAW_INFO'); ?></p>
         <form action="/wallet/withdraw" method="POST" class="clearfix" id="withdrawform">
             <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
             <input type="text" class="form-control" name="address" id="address" placeholder="<?php echo lang('WALLET_ADDRESS'); ?>">
@@ -99,7 +99,7 @@ if ($admin)
        <?php
        $bold_txxs = "";
        foreach((array)$transactionList as $transaction) {
-          if($transaction['category']=="send") { $tx_type = '<b style="color: #FF0000;">Sent</b>'; } else { $tx_type = '<b style="color: #01DF01;">Received</b>'; }
+          if($transaction['category']=="send") { $tx_type = '<b style="color: #FF0000;">' . lang('WALLET_TRANSACTIONS_TABLE_SENT') . '</b>'; } else { $tx_type = '<b style="color: #01DF01;">' . lang('WALLET_TRANSACTIONS_TABLE_RECEIVED') . '</b>'; }
           echo '<tr>
                    <td>'.date('n/j/Y h:i a',$transaction['time']).'</td>
                    <td>'.$transaction['address'].'</td>
@@ -107,7 +107,7 @@ if ($admin)
                    <td>'.abs($transaction['amount']).'</td>
                    <td>'.$transaction['fee'].'</td>
                    <td>'.$transaction['confirmations'].'</td>
-                   <td><a href="' . config('app', 'blockchain_url'),  $transaction['txid'] . '" target="_blank">Info</a></td>
+                   <td><a href="' . config('app', 'blockchain_url'),  $transaction['txid'] . '" target="_blank">' . lang('WALLET_TRANSACTIONS_TABLE_INFO') . '</a></td>
                 </tr>';
        }
        ?>
@@ -148,15 +148,15 @@ if ($admin)
 
         <div id="verifytwofactor">
 
-            <h3>Step 1: Secret Key</h3>
+            <h3><?php echo lang('WALLET_2FAVERIFY_STEP1_HEADLINE'); ?></h3>
             <p style="font-weight: bold;" id="2factorauth-secret"></p>
-            <p style='color: red; font-weight: bold;'>* Please write this down and keep in a secure area *</p><br><br>
+            <p style='color: red; font-weight: bold;'><?php echo lang('WALLET_2FAVERIFY_WRITE_IT_DOWN'); ?></p><br><br>
 
-            <h3>Step 2: Authenticator</h3>
+            <h3><?php echo lang('WALLET_2FAVERIFY_STEP2_HEADLINE'); ?></h3>
             <img src="" id="2factorauth-qrcode" /><br><br>
-            <p>Please scan this with the Google Authenticator app on your mobile phone. This page will clear on refresh, please be careful.</p><br><br>
+            <p><?php echo lang('WALLET_2FAVERIFY_SCAN_QR'); ?></p><br><br>
 
-            <h3><?php echo lang('WALLET_2FAVERIFY_HEADLINE'); ?></h3>
+            <h3><?php echo lang('WALLET_2FAVERIFY_STEP3_HEADLINE'); ?></h3>
             <form action="/auth/twofactorauth" method="PUT" id="verifytwofactorform">
                 <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                 <p><?php echo lang('WALLET_2FAVERIFY_DESC'); ?></p>
@@ -228,7 +228,9 @@ $(document).on('submit', '#withdrawform', function(e) {
     var address = $(this).find('[name="address"]').val();
     var amount  = $(this).find('[name="amount"]').val();
 
-    if (!confirm('Are you sure, you want to send ' + amount + ' VLU to "' + address + '"?\n\nThis action cannot be undone.')) {
+    var confirm_text = '<?php echo lang('WALLET_WITHDRAW_CONFIRM') ?>';
+
+    if (!confirm(confirm_text.replace(':amount', amount).replace(':address', address))) {
         e.preventDefault;
         return false;
     }
@@ -418,7 +420,7 @@ $(document).on('submit', '#verifytwofactorform', function(e)
         error: function(jqXHR, textStatus, errorThrown) 
         {
             console.log('error', textStatus, errorThrown);
-            $('#verifytwofactor-msg').text('An error occurred. Please make sure your session is still active.');
+            $('#verifytwofactor-msg').text('<?php echo lang('WALLET_FRONTEND_AJAX_ERROR'); ?>');
             $('#verifytwofactor-msg').show();
         }
     });
@@ -439,10 +441,10 @@ function updateTables(json)
   if (json.transactionList) {
 
   	for (var i = json.transactionList.length - 1; i >= 0; i--) {
-  		var tx_type = '<b style="color: #01DF01;">Received</b>';
+  		var tx_type = '<b style="color: #01DF01;"><?php echo lang('WALLET_TRANSACTIONS_TABLE_RECEIVED'); ?></b>';
   		if(json.transactionList[i]['category']=="send")
   		{
-  			tx_type = '<b style="color: #FF0000;">Sent</b>';
+  			tx_type = '<b style="color: #FF0000;"><?php echo lang('WALLET_TRANSACTIONS_TABLE_SENT'); ?></b>';
   		}
   		$("#txlist tbody").prepend('<tr> \
                  <td>' + moment(json.transactionList[i]['time'], "X").format('l hh:mm a') + '</td> \
@@ -451,7 +453,7 @@ function updateTables(json)
                  <td>' + Math.abs(json.transactionList[i]['amount']) + '</td> \
                  <td>' + json.transactionList[i]['fee'] + '</td> \
                  <td>' + json.transactionList[i]['confirmations'] + '</td> \
-                 <td><a href="' + blockchain_url.replace("%s", json.transactionList[i]['txid']) + '" target="_blank">Info</a></td> \
+                 <td><a href="' + blockchain_url.replace("%s", json.transactionList[i]['txid']) + '" target="_blank"><?php echo lang('WALLET_TRANSACTIONS_TABLE_INFO'); ?></a></td> \
               </tr>');
     }
 	}

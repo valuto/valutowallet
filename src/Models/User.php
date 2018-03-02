@@ -65,7 +65,7 @@ class User {
                 try {
                     $oneCode = $this->get2faOneCode($user, $password);
                 } catch (WrongKeyOrModifiedCiphertextException $ex) {
-                    return 'Username, password or 2 factor is incorrect.';
+                    return lang('WALLET_LOGIN_INCORRECT');
                 }
             }
 
@@ -75,11 +75,11 @@ class User {
                 return $user;
         	} elseif ($user && $passwordmatch && $user['locked'] == 1) {
     			$pin = $user['supportpin'];
-        		return "Account is locked. Contact support for more information. $pin";
+        		return lang('WALLET_LOGIN_ACCOUNT_LOCKED') . " $pin";
             } elseif ($user && $passwordmatch && $user['locked'] == 0 && ($user['authused'] == 1 && $oneCode == $_POST['auth']))  {
 			    return $user;
         	} else {
-        		return "Username, password or 2 factor is incorrect";
+        		return lang('WALLET_LOGIN_INCORRECT');
         	}
 
 		}
@@ -139,25 +139,25 @@ class User {
 
 		{
 
-			return "Please, fill all the fields";
+			return lang('WALLET_REGISTER_MISSING_FIELDS');
 
 		} elseif ($password != $confirmPassword)
 
 		{
 
-			return "Passwords did not match";
+			return lang('WALLET_REGISTER_PASSWORD_NOT_MATCH');
 
 		} elseif ((strlen($username) < 3) || (strlen($username) > 30))
 
 		{
 
-			return "Username must be between 3 and 30 characters";
+			return lang('WALLET_REGISTER_USERNAME_LENGTH');
 
 		} elseif (strlen($password) < 3)
 
 		{
 
-			return "Password must be longer than 3 characters";
+			return lang('WALLET_REGISTER_PASSWORD_LENGTH');
 
 		} else {
 
@@ -175,7 +175,7 @@ class User {
 
 			{
 
-				return "Username already taken";
+				return lang('WALLET_REGISTER_USERNAME_IN_USE');
 
 			} else {
 
@@ -186,7 +186,7 @@ class User {
 
 					return true;
 				} else {
-					return "System error";
+					return lang('WALLET_SYSTEM_ERROR');
 
 				}
 
@@ -199,7 +199,7 @@ class User {
 	{
 		if ($newPassword != $confirmPassword)
 		{
-			return "Passwords did not match.";
+			return lang('WALLET_UPDATEPW_NOT_MATCH');
 		} else {
 			//Get old password
 			$result = $this->mysqli->query("SELECT * FROM users WHERE username='" . $user_session . "'");
@@ -213,12 +213,12 @@ class User {
                 if (is_null($user['password']) && $user['password_old_md5'] != md5($oldPassword))
                 {
 
-                    return "Password is incorrect.";
+                    return lang('WALLET_UPDATEPW_INCORRECT_PW');
 
                 // BCRYPT
                 } elseif (!is_null($user['password']) && ! password_verify($oldPassword, $user['password'])) {
 
-                    return "Password is incorrect.";
+                    return lang('WALLET_UPDATEPW_INCORRECT_PW');
 
 				} else {
 
@@ -241,7 +241,7 @@ class User {
                     $stmt->close();
 
 					if (!$result) {
-						return "Some sort of error occured.";
+						return lang('WALLET_UNKNOWN_ERROR');
                     }
 
                     // Update encrypted 2fa secret.
@@ -255,7 +255,7 @@ class User {
 
 			} else {
 
-				return "Some sort of error occured.";
+				return lang('WALLET_UNKNOWN_ERROR');
 
 			}
 
@@ -360,7 +360,7 @@ class User {
  	    $id = $_SESSION['user_id'];
 
 		if ($id) {
-            $msg = "Two Factor Auth has been disabled for your account and will no longer be required when you sign in.";
+            $msg = lang('WALLET_2FA_DISAUTH_COMPLETED');
 
             $stmt = $this->mysqli->prepare('UPDATE users SET authused=0, secret=NULL, protected_key=NULL, secret_encrypted=NULL WHERE id=?');
 

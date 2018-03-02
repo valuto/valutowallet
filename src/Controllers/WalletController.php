@@ -54,21 +54,21 @@ class WalletController extends Controller
 
         $json['success'] = false;
         if (!config('app', 'withdrawals_enabled')) {
-            $json['message'] = "Withdrawals are temporarily disabled";
+            $json['message'] = lang('WALLET_WITHDRAW_TEMP_DISABLED');
         } elseif (empty($_POST['address']) || empty($_POST['amount']) || !is_numeric($_POST['amount'])) {
             $json['message'] = "You have to fill all the fields";
         } elseif ($_POST['token'] != $_SESSION['token']) {
-            $json['message']   = "Tokens do not match";
+            $json['message']   = lang('WALLET_TOKENS_DO_NOT_MATCH');
             $_SESSION['token'] = sha1('@s%a$l£t#' . rand(0, 10000));
             $json['newtoken']  = $_SESSION['token'];
         } elseif ($_POST['amount'] > $balance) {
-            $json['message'] = "Withdrawal amount exceeds your wallet balance. Please note the wallet owner has set a reserve fee of config('app', 'reserve') " . config('app', 'short');
+            $json['message'] = lang('WALLET_WITHDRAW_BALANCE') . config('app', 'reserve') . ' ' . config('app', 'short');
         } else {
             $withdraw_message        = $this->client->withdraw($_SESSION['user_session'], $_POST['address'], (float) $_POST['amount']);
             $_SESSION['token']       = sha1('@s%a$l£t#' . rand(0, 10000));
             $json['newtoken']        = $_SESSION['token'];
             $json['success']         = true;
-            $json['message']         = "Withdrawal successful";
+            $json['message']         = lang('WALLET_WITHDRAW_SUCCESSFUL');
             $json['balance']         = $this->client->getBalance($_SESSION['user_session']);
             $json['addressList']     = $this->client->getAddressList($_SESSION['user_session']);
             $json['transactionList'] = $this->client->getTransactionList($_SESSION['user_session']);
