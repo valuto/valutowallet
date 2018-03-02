@@ -105,7 +105,7 @@ if ($admin)
                    <td>'.$transaction['address'].'</td>
                    <td>'.$tx_type.'</td>
                    <td>'.abs($transaction['amount']).'</td>
-                   <td>'.$transaction['fee'].'</td>
+                   <td>'.isset($transaction['fee']) ? $transaction['fee'] : '-'.'</td>
                    <td>'.$transaction['confirmations'].'</td>
                    <td><a href="' . config('app', 'blockchain_url'),  $transaction['txid'] . '" target="_blank">' . lang('WALLET_TRANSACTIONS_TABLE_INFO') . '</a></td>
                 </tr>';
