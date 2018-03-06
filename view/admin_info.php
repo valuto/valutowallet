@@ -87,9 +87,9 @@ echo "<tr><td>".$address."</td></tr>\n";
                <td>'.$transaction['address'].'</td>
                <td>'.$tx_type.'</td>
                <td>'.abs($transaction['amount']).'</td>
-               <td>'.isset($transaction['fee']) ? $transaction['fee'] . '-'.'</td>
+               <td>'.(isset($transaction['fee']) ? $transaction['fee'] : '-').'</td>
                <td>'.$transaction['confirmations'].'</td>
-               <td><a href="' . config('app', 'blockchain_url'), $transaction['txid'] . '" target="_blank">Info</a></td>
+               <td><a href="' . config('app', 'blockchain_url') . $transaction['txid'] . '" target="_blank">Info</a></td>
             </tr>';
    }
    ?>
