@@ -26,7 +26,7 @@ if ($admin)
 <div id="vueapp">
 
   <section class="col-md-12" id="walletOverview" v-show="showtab === 'wallet'">
-    <h1><button type="button" class="btn btn-link" style="float: right;" id="donate"><?php echo lang('WALLET_DONATE_LINK'); ?></button><?php echo lang('WALLET_OVERVIEW_HEADLINE'); ?></h1>
+    <h1><?php echo lang('WALLET_OVERVIEW_HEADLINE'); ?></h1>
 
     <div class="row">
     <div class="col-md-4">

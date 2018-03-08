@@ -32,15 +32,6 @@ if (!empty($info) && is_array($info))
 </form>
 <p id="pwdmsg"></p>
 <br />
-<p>Withdraw funds:</p>
-<form action="<?php echo '/admin/info?i=' . $info['id']; ?>" method="POST" class="clearfix" id="withdrawform">
-    <input type="hidden" name="jsaction" value="withdraw" />
-    <div class="col-md-4"><input type="text" class="form-control" name="address" placeholder="Address"></div>
-    <div class="col-md-2"><input type="text" class="form-control" name="amount" placeholder="Amount"></div>
-    <div class="col-md-2"><button type="submit" class="btn btn-default">Withdraw</button></div>
-</form>
-<p id="withdrawmsg"></p>
-<br />
 <p>Addresses:</p>
 <form action="<?php echo '/admin/info?i=' . $info['id']; ?>" method="POST" id="newaddressform">
    <input type="hidden" name="jsaction" value="new_address" />
@@ -126,38 +117,6 @@ $("#pwdform").submit(function(e)
                $("#pwdmsg").text(json.message);
                $("#pwdmsg").css("color", "red");
                $("#pwdmsg").show();
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) 
-        {
-            //ugh, gtfo    
-        }
-    });
-    e.preventDefault();
-});
-$("#withdrawform").submit(function(e)
-{
-    var postData = $(this).serializeArray();
-    var formURL = $(this).attr("action");
-    $.ajax(
-    {
-        url : formURL,
-        type: "POST",
-        data : postData,
-        success:function(data, textStatus, jqXHR) 
-        {
-            var json = $.parseJSON(data);
-            if (json.success)
-            {
-               $("#withdrawform input.form-control").val("");
-               $("#withdrawmsg").text(json.message);
-               $("#withdrawmsg").css("color", "green");
-               $("#withdrawmsg").show();
-               updateTables(json);
-            } else {
-               $("#withdrawmsg").text(json.message);
-               $("#withdrawmsg").css("color", "red");
-               $("#withdrawmsg").show();
             }
         },
         error: function(jqXHR, textStatus, errorThrown) 

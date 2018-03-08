@@ -29,12 +29,18 @@ if (!empty($msg))
       echo '<tr>
                <td>' . $user['username'] . '</td>
                <td>' . $user['date'] . '</td>
-               <td>' . ($user['admin'] ? '<strong>Yes</strong> <a href="/admin?i=' . $user['id'] . '" data-method="delete">De-admin</a>' : 'No <a href="/admin?i=' . $user['id'] . '" data-method="post">Make admin</a>') . '</td>
+               <td>' . ($user['admin'] ? '<strong>Yes</strong> <a href="/admin?i=' . $user['id'] . '" data-method="delete">De-admin</a>' : 'No <a href="/admin?i=' . $user['id'] . '" data-method="post" onclick="alert(\'Please be aware, that you are now making a user admin.\')">Make admin</a>') . '</td>
                <td>' . ($user['locked'] ? '<strong>Yes</strong> <a href="/admin/unlock?i=' . $user['id'] . '" data-method="put">Unlock</a>' : 'No <a href="/admin/lock?i=' . $user['id'] . '" data-method="put">Lock</a>') . '</td>
                <td>' . $user['ip'] . '</td>
-               <td>' . '<a href="/admin/info?i=' . $user['id'] . '">Info</a>' . '</td>
-                       <td>' . '<a href="/admin/delete-user?i=' . $user['id'] . '" data-method="delete" data-confirm="Are you sure you really want to delete user ' . $user['username'] . ' (id=' . $user['id'] . ')?">Delete</a>' . '</td>
-            </tr>';
+               <td>' . '<a href="/admin/info?i=' . $user['id'] . '">Info</a>' . '</td>';
+
+        if (is_null($user['deleted_at'])) {
+            echo '<td>' . '<a href="/admin/delete-user?i=' . $user['id'] . '" data-method="delete" data-confirm="Are you sure you really want to delete user ' . $user['username'] . ' (id=' . $user['id'] . ')?">Delete</a>' . '</td>';
+        } else {
+            echo '<td>User deleted</td>';
+        }
+
+       echo '</tr>';
    }
    ?>
    </tbody>

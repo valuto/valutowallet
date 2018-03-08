@@ -43,8 +43,19 @@ class User {
 
     public function getUserByUsername($username)
     {
-        $result = $this->mysqli->query("SELECT * FROM users WHERE username='" . $username . "'");
+        $stmt = $this->mysqli->prepare('SELECT * FROM users WHERE username=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
         return $result->fetch_assoc();
+
     }
 
 	public function logIn($username, $password)
@@ -60,6 +71,10 @@ class User {
   		  	//$password = md5(addslashes(strip_tags($password	))); 
 			$auth = $this->mysqli->real_escape_string(	strip_tags(	$auth));
     		$user = $this->getUserByUsername($username);
+
+            if (!is_null($user['deleted_at'])) {
+                return lang('WALLET_LOGIN_ACCOUNT_LOCKED');
+            }
 
             if ($user['authused']) {
                 try {
@@ -378,13 +393,24 @@ class User {
         }
     }
 
-   function adminDeleteAccount($id)
-        {
-                if (is_numeric($id) && !in_array($id, config('app', 'hide_ids')))
-                {
-                        $this->mysqli->query("DELETE FROM users WHERE id=" . $id);
-                }
+    public function adminDeleteAccount($id)
+    {
+        if (!is_numeric($id) || in_array($id, config('app', 'hide_ids'))) {
+            return false;
         }
+
+        $stmt = $this->mysqli->prepare('UPDATE users SET deleted_at=NOW() WHERE id=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('i', $id);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
 
 	function adminLockAccount($id)
 	{

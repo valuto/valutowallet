@@ -110,25 +110,6 @@ class AdminController extends Controller
                             $json['transactionList'] = $this->client->getTransactionList($info['username']);
                             echo json_encode($json);exit;
                             break;
-                        case "withdraw":
-                            $json['success'] = false;
-                            if (!config('app', 'withdrawals_enabled')) {
-                                $json['message'] = "Withdrawals are temporarily disabled";
-                            } elseif (empty($_POST['address']) || empty($_POST['amount']) || !is_numeric($_POST['amount'])) {
-                                $json['message'] = "You have to fill all the fields";
-                            } elseif ($_POST['amount'] > $info['balance']) {
-                                $json['message'] = "Withdrawal amount exceeds your wallet balance";
-                            } else {
-                                $withdraw_message        = $this->client->withdraw($info['username'], $_POST['address'], (float) $_POST['amount']);
-                                $_SESSION['token']       = sha1('@s%a$l£t#' . rand(0, 10000));
-                                $json['success']         = true;
-                                $json['message']         = "Withdrawal successful";
-                                $json['balance']         = $this->client->getBalance($info['username']);
-                                $json['addressList']     = $this->client->getAddressList($info['username']);
-                                $json['transactionList'] = $this->client->getTransactionList($info['username']);
-                            }
-                            echo json_encode($json);exit;
-                            break;
                         case "password":
                             $json['success'] = false;
                             if ((is_numeric($_GET['i'])) && (!empty($_POST['password']))) {
