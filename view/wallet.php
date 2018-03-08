@@ -105,7 +105,7 @@ if ($admin)
                    <td>'.$transaction['address'].'</td>
                    <td>'.$tx_type.'</td>
                    <td>'.abs($transaction['amount']).'</td>
-                   <td>'.(isset($transaction['fee']) ? $transaction['fee'] : '-').'</td>
+                   <td>'.(isset($transaction['fee']) ? abs($transaction['fee']) : '-').'</td>
                    <td>'.$transaction['confirmations'].'</td>
                    <td><a href="' . config('app', 'blockchain_url') . $transaction['txid'] . '" target="_blank">' . lang('WALLET_TRANSACTIONS_TABLE_INFO') . '</a></td>
                 </tr>';
@@ -430,7 +430,7 @@ $(document).on('submit', '#verifytwofactorform', function(e)
 
 function updateTables(json)
 {
-  console.log('updateTables', json);
+    console.log('updateTables', json);
 	$("#balance").text(json.balance.toFixed(8));
 	$("#alist tbody tr").remove();
 	for (var i = json.addressList.length - 1; i >= 0; i--) {
@@ -438,24 +438,30 @@ function updateTables(json)
 	}
 	$("#txlist tbody tr").remove();
 
-  if (json.transactionList) {
+    if (json.transactionList) {
 
-  	for (var i = json.transactionList.length - 1; i >= 0; i--) {
-  		var tx_type = '<b style="color: #01DF01;"><?php echo lang('WALLET_TRANSACTIONS_TABLE_RECEIVED'); ?></b>';
-  		if(json.transactionList[i]['category']=="send")
-  		{
-  			tx_type = '<b style="color: #FF0000;"><?php echo lang('WALLET_TRANSACTIONS_TABLE_SENT'); ?></b>';
-  		}
-  		$("#txlist tbody").prepend('<tr> \
-                 <td>' + moment(json.transactionList[i]['time'], "X").format('l hh:mm a') + '</td> \
-                 <td>' + json.transactionList[i]['address'] + '</td> \
-                 <td>' + tx_type + '</td> \
-                 <td>' + Math.abs(json.transactionList[i]['amount']) + '</td> \
-                 <td>' + json.transactionList[i]['fee'] + '</td> \
-                 <td>' + json.transactionList[i]['confirmations'] + '</td> \
-                 <td><a href="' + blockchain_url.replace("%s", json.transactionList[i]['txid']) + '" target="_blank"><?php echo lang('WALLET_TRANSACTIONS_TABLE_INFO'); ?></a></td> \
-              </tr>');
-    }
+      	for (var i = json.transactionList.length - 1; i >= 0; i--) {
+            var tx_type = '<b style="color: #01DF01;"><?php echo lang('WALLET_TRANSACTIONS_TABLE_RECEIVED'); ?></b>';
+            if(json.transactionList[i]['category']=="send") {
+            	tx_type = '<b style="color: #FF0000;"><?php echo lang('WALLET_TRANSACTIONS_TABLE_SENT'); ?></b>';
+            }
+
+            if (typeof json.transactionList[i]['fee'] !== 'undefined') {
+                var fee = Math.abs(json.transactionList[i]['fee']);
+            } else {
+                var fee = '-';
+            }
+
+      		$("#txlist tbody").prepend('<tr> \
+                     <td>' + moment(json.transactionList[i]['time'], "X").format('l hh:mm a') + '</td> \
+                     <td>' + json.transactionList[i]['address'] + '</td> \
+                     <td>' + tx_type + '</td> \
+                     <td>' + Math.abs(json.transactionList[i]['amount']) + '</td> \
+                     <td>' + fee + '</td> \
+                     <td>' + json.transactionList[i]['confirmations'] + '</td> \
+                     <td><a href="' + blockchain_url.replace("%s", json.transactionList[i]['txid']) + '" target="_blank"><?php echo lang('WALLET_TRANSACTIONS_TABLE_INFO'); ?></a></td> \
+                  </tr>');
+        }
 	}
 }
 
