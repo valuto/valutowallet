@@ -20,7 +20,27 @@
     }
     ?>
 
-    <section class="col-md-6 col-sm-12" id="loginSection">
+    <section class="col-md-5 col-sm-12" id="signupSection">
+        <h1><?php echo lang('FORM_CREATE'); ?></h1>
+        <form action="auth/register" method="POST" class="clearfix" id="registerform">
+            <div class="form-group">
+                <label for="signupUsername"><?php echo lang('FORM_USER'); ?></label>
+                <input type="text" name="username" class="form-control" id="signupUsername" placeholder="<?php echo lang('FORM_USER'); ?>">
+            </div>
+            <div class="form-group">
+                <label for="signupPassword"><?php echo lang('FORM_PASS'); ?></label>
+                <input type="password" name="password" class="form-control" id="signupPassword" placeholder="<?php echo lang('FORM_PASS'); ?>">
+            </div>
+            <div class="form-group">
+                <label for="signupPasswordConf"><?php echo lang('FORM_PASSCONF'); ?></label>
+                <input type="password" name="confirmPassword" class="form-control" id="signupPasswordConf" placeholder="<?php echo lang('FORM_PASSCONF'); ?>" aria-describedby="signupPasswordConfHelp">
+                <small id="signupPasswordConfHelp" class="form-text text-muted"><?php echo lang('FORM_PASSCONF_HELP'); ?></small>
+            </div>
+            <button class="g-recaptcha btn btn-default btn-signup" id="signupsubmitbtn"><?php echo lang('FORM_SIGNUP'); ?></button>
+        </form>
+    </section>
+
+    <section class="col-md-offset-1 col-md-6 col-sm-12" id="loginSection">
 
         <h1><?php echo lang('FORM_LOGIN'); ?></h1>
         <form action="/auth/login" method="POST" class="clearfix" id="loginform">
@@ -38,25 +58,5 @@
                 <small id="2faHelp" class="form-text text-muted"><?php echo lang('FORM_2FA_HELP'); ?></small>
             </div>
             <button class="g-recaptcha btn btn-default btn-login" id="loginsubmitbtn"><?php echo lang('FORM_LOGIN'); ?></button>
-        </form>
-    </section>
-
-    <section class="col-md-offset-1 col-md-5 col-sm-12" id="signupSection">
-        <h1><?php echo lang('FORM_CREATE'); ?></h1>
-        <form action="auth/register" method="POST" class="clearfix" id="registerform">
-            <div class="form-group">
-                <label for="signupUsername"><?php echo lang('FORM_USER'); ?></label>
-                <input type="text" name="username" class="form-control" id="signupUsername" placeholder="<?php echo lang('FORM_USER'); ?>">
-            </div>
-            <div class="form-group">
-                <label for="signupPassword"><?php echo lang('FORM_PASS'); ?></label>
-                <input type="password" name="password" class="form-control" id="signupPassword" placeholder="<?php echo lang('FORM_PASS'); ?>">
-            </div>
-            <div class="form-group">
-                <label for="signupPasswordConf"><?php echo lang('FORM_PASSCONF'); ?></label>
-                <input type="password" name="confirmPassword" class="form-control" id="signupPasswordConf" placeholder="<?php echo lang('FORM_PASSCONF'); ?>" aria-describedby="signupPasswordConfHelp">
-                <small id="signupPasswordConfHelp" class="form-text text-muted"><?php echo lang('FORM_PASSCONF_HELP'); ?></small>
-            </div>
-            <button class="g-recaptcha btn btn-default btn-signup" id="signupsubmitbtn"><?php echo lang('FORM_SIGNUP'); ?></button>
         </form>
     </section>

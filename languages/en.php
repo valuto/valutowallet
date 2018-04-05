@@ -29,7 +29,7 @@ return [
     'FORM_2FA_PLACEHOLDER' => 'Authentication code',
     'FORM_2FA_HELP' => 'Please Enter Your 2FA Authentication Code, If You Have 2FA Authentication Enabled.',
     'FORM_SIGNUP' => 'Sign Up',
-    'FORM_CREATE' => 'Create New Account',
+    'FORM_CREATE' => 'Create Free Account',
 
     // Wallet Page
 
