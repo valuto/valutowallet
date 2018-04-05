@@ -14,6 +14,11 @@
         };
     </script>
 
+<div class="row top-banner-row">
+ <div class="col-md-12"><img style="max-width: 100%; margin-bottom: 50px;" src="/assets/img/NewFeatures_Nonretina.jpg" srcset="/assets/img/NewFeatures_retina.jpg 3x" />
+ </div>
+</div>
+
     <?php
     if (\Models\Flash::has('error')) {
         echo "<p style='font-weight: bold; color: red; text-align: center; margin-bottom: 30px;'>" . \Models\Flash::showOnce('error') . "</p>";

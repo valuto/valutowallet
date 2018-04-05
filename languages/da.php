@@ -29,7 +29,7 @@ return [
     'FORM_2FA_PLACEHOLDER' => 'Godkendelseskode',
     'FORM_2FA_HELP' => 'Indtast venligst en tofaktorgodkendelseskode, hvis du har tofaktorgodkendelse aktiveret.',
     'FORM_SIGNUP' => 'Registrer',
-    'FORM_CREATE' => 'Opret Ny Konto',
+    'FORM_CREATE' => 'Opret Gratis Konto',
 
     // Wallet Page
 

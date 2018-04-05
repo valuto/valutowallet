@@ -204,6 +204,8 @@ a:hover, .btn-link:hover {
         display: none;
     }
 
+    .top-banner-row { display: none; }
+
     main section#walletOverview #withdrawform input#address {
         width: 100%;
         float: none;
