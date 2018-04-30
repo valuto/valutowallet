@@ -110,6 +110,7 @@ return [
     'WALLET_TRANSACTIONS_TABLE_RECEIVED' => 'Recibido',
     'WALLET_TRANSACTIONS_TABLE_SENT' => 'Expedido',
     'WALLET_TRANSACTIONS_TABLE_INFO' => 'Información',
+    'WALLET_NOTICE_ENABLE_2FA' => 'Two-factor authentication is an extra layer of security for your wallet account. Please enable two-factor authentication under the tab "Account".',
 
     // Disclaimer
 

@@ -110,6 +110,7 @@ return [
     'WALLET_TRANSACTIONS_TABLE_RECEIVED' => 'Modtaget',
     'WALLET_TRANSACTIONS_TABLE_SENT' => 'Sendt',
     'WALLET_TRANSACTIONS_TABLE_INFO' => 'Info',
+    'WALLET_NOTICE_ENABLE_2FA' => 'Tofaktorgodkendelse er et ekstra sikkerhedslag til din Wallet konto. Du bør aktivere tofaktorgodkendelse under fanen "Konto".',
 
     // Disclaimer
 

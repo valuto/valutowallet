@@ -13,9 +13,7 @@ class User {
 
 	function __construct($mysqli)
 	{
-
 		$this->mysqli = $mysqli;
-
 	}
 
     /**

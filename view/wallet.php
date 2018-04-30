@@ -10,6 +10,12 @@ if ($error && !empty($error['message'])) {
 </section>
 <?php endif; ?>
 
+<?php if(!$twofactorenabled && ! \Models\Flash::has('promptupdatepw')): ?>
+<section class="col-md-12" id="walletMessage2fa" style="margin-bottom: 50px !important; background-color: #f29400; color: #fff;">
+    <strong><?php echo lang('WALLET_NOTICE'); ?></strong>&nbsp;&nbsp;<?php echo lang('WALLET_NOTICE_ENABLE_2FA'); ?>
+</section>
+<?php endif; ?>
+
 <?php
 if ($admin)
 {
@@ -65,22 +71,18 @@ if ($admin)
       <p><strong><?php echo lang('WALLET_USERADDRESSES'); ?></strong></p>
       <p id="newaddressmsg"></p>
       <table class="table table-bordered table-striped" id="alist">
-      <thead>
-      <tr>
-      <td><?php echo lang('WALLET_ADDRESS'); ?>:</td>
-      <td><?php echo lang('WALLET_QRCODE'); ?>:</td>
-      </tr>
-      </thead>
-      <tbody>
-      <?php
-      foreach ($addressList as $address) {
-        echo "<tr><td>".$address."</t>";?>
-        <td><a href="/qrcode/?address=<?php echo $address;?>">
-          <img src="/qrcode/?address=<?php echo $address;?>" alt="QR Code" style="width:42px;height:42px;border:0;"></td><tr>
+        <thead>
+            <tr>
+                <td><?php echo lang('WALLET_ADDRESS'); ?>:</td>
+                <td><?php echo lang('WALLET_QRCODE'); ?>:</td>
+            </tr>
+        </thead>
+        <tbody>
         <?php
-      }
-      ?>
-      </tbody>
+        foreach ($addressList as $address) {
+            echo "<tr><td>".$address."</td><td><a href=\"/qrcode/?address=" . $address . "\"><img src=\"/qrcode/?address=" . $address . "\" alt=\"QR Code\" style=\"width:42px;height:42px;border:0;\"></td></tr>";
+        } ?>
+        </tbody>
       </table>
       <form action="/wallet/newaddress" method="POST" id="newaddressform">
         <button type="submit" class="btn btn-default"><?php echo lang('WALLET_NEWADDRESS'); ?></button>
@@ -275,11 +277,10 @@ $(document).on('submit', '#newaddressform', function(e) {
         url : $(this).attr('action'),
         type: "POST",
         data : $(this).serializeArray(),
-        success:function(data, textStatus, jqXHR) {
+        success: function(data, textStatus, jqXHR) {
             console.log('newaddressform success', data);
             var json = $.parseJSON(data);
-            if (json.success)
-            {
+            if (json.success) {
             	$("#newaddressmsg").text(json.message);
             	$("#newaddressmsg").css("color", "green");
             	$("#newaddressmsg").show();
@@ -440,7 +441,7 @@ function updateTables(json)
 	$("#balance").text(json.balance.toFixed(8));
 	$("#alist tbody tr").remove();
 	for (var i = json.addressList.length - 1; i >= 0; i--) {
-		$("#alist tbody").prepend("<tr><td>" + json.addressList[i] + "</td></tr>");
+		$("#alist tbody").prepend("<tr><td>" + json.addressList[i] + "</td><td><a href=\"/qrcode/?address=" + json.addressList[i] + "\"><img src=\"/qrcode/?address=" + json.addressList[i] + "\" alt=\"QR Code\" style=\"width:42px;height:42px;border:0;\"></td></tr>");
 	}
 	$("#txlist tbody tr").remove();
 

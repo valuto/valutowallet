@@ -11,7 +11,7 @@ $route->delete('admin/delete-user', 'Controllers\AdminController@deleteUser')->m
 $route->get('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin']);
 $route->post('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin']); // Make post route accesible until refactoring of that controller method is done
 
-$route->get('', 'Controllers\DashboardController@index')->middleware('auth');
+$route->if(authed())->get('', 'Controllers\DashboardController@index')->middleware('auth');
 $route->post('accept-disclaimer', 'Controllers\DashboardController@acceptDisclaimer')->middleware('auth');
 $route->put('lang', 'Controllers\LanguageController@update');
 
@@ -30,3 +30,7 @@ $route->post('auth/logout', 'Controllers\Auth\LoginController@destroy');
 $route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware('recaptcha');
 $route->get('', 'Controllers\HomeController@index');
 $route->get('index.php', 'Controllers\HomeController@redirect');
+
+$route->post('api/v1/access-token', 'Controllers\Api\V1\Auth\AccessTokenController@store');
+$route->get('api/v1/user', 'Controllers\Api\V1\UserCheckController@show')->middleware('apiauth');
+$route->post('api/v1/user', 'Controllers\Api\V1\UserCreateController@store')->middleware('apiauth');
