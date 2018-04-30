@@ -33,7 +33,7 @@ class LoginController extends Controller
             $_SESSION['user_supportpin'] = $result['supportpin'];
             $_SESSION['user_id']         = $result['id'];
             $_SESSION['user_2fa']        = $result['authused'];
-            $_SESSION['user_uses_old_account_identifer'] = $result['uses_old_account_identifier'];
+            $_SESSION['user_uses_old_account_identifier'] = $result['uses_old_account_identifier'];
             if (is_null($result['password'])) {
                 Flash::save('promptupdatepw', '1');
             }
