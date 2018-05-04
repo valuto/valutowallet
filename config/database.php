@@ -5,21 +5,21 @@ return [
     /**
      * Database host
      */
-    'host' => "127.0.0.1:3306",
+    'host' => env('DATABASE_HOST', '127.0.0.1:3306'),
 
     /**
      * Database username
      */
-    'username' => "",
+    'username' => env('DATABASE_USERNAME', 'homestead'),
 
     /**
      * Database password
      */
-    'password' => "",
+    'password' => env('DATABASE_PASSWORD', 'secret'),
 
     /**
      * Database schema name
      */
-    'database' => "wallet",
+    'database' => env('DATABASE_SCHEMA', 'wallet'),
 
 ];

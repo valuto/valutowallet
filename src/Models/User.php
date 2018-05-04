@@ -13,9 +13,7 @@ class User {
 
 	function __construct($mysqli)
 	{
-
 		$this->mysqli = $mysqli;
-
 	}
 
     /**
@@ -27,6 +25,11 @@ class User {
      */
     public function verifyPasswordMatch($password, $user)
     {
+        // No password set for user.
+        if (is_null($user['password_old_md5']) && is_null($user['password'])) {
+            return false;
+        }
+
         // Old MD5
         if (is_null($user['password']) && ($user['password_old_md5'] == md5(addslashes(strip_tags($password))))) {
             return true;
@@ -58,6 +61,58 @@ class User {
 
     }
 
+    public function getUserByEmail($email)
+    {
+        $stmt = $this->mysqli->prepare('SELECT * FROM users WHERE email=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return $result->fetch_assoc();
+
+    }
+
+    /**
+     * Get user to be activated.
+     * 
+     * @param  int    $userId
+     * @param  string $token
+     * @return array
+     */
+    public function getUserByActivationToken($userId, $token)
+    {
+        $stmt = $this->mysqli->prepare('
+            SELECT
+                *
+            FROM
+                users
+            WHERE
+                id=? AND 
+                set_password_token IS NOT NULL AND 
+                set_password_token=? AND 
+                set_password_before > NOW() AND 
+                password IS NULL AND 
+                password_old_md5 IS NULL 
+            LIMIT 1');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('is', $userId, $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return $result->fetch_assoc();
+    }
+
 	public function logIn($username, $password)
 	{
 		if (empty($username) || empty($password))
@@ -66,7 +121,7 @@ class User {
 			return false;
 		} 
 		else {
-			$auth=$_POST['auth'];
+			$auth= isset($_POST['auth']) ? $_POST['auth'] : 0;
 			$username = $this->mysqli->real_escape_string(strip_tags($username));
   		  	//$password = md5(addslashes(strip_tags($password	))); 
 			$auth = $this->mysqli->real_escape_string(	strip_tags(	$auth));
@@ -91,7 +146,7 @@ class User {
         	} elseif ($user && $passwordmatch && $user['locked'] == 1) {
     			$pin = $user['supportpin'];
         		return lang('WALLET_LOGIN_ACCOUNT_LOCKED') . " $pin";
-            } elseif ($user && $passwordmatch && $user['locked'] == 0 && ($user['authused'] == 1 && $oneCode == $_POST['auth']))  {
+            } elseif ($user && $passwordmatch && $user['locked'] == 0 && ($user['authused'] == 1 && $oneCode == $auth))  {
 			    return $user;
         	} else {
         		return lang('WALLET_LOGIN_INCORRECT');
@@ -99,7 +154,23 @@ class User {
 
 		}
 
-	}
+    }
+    
+    /**
+     * Authenticate user by setting session information.
+     * 
+     * @param  array $data
+     * @return void
+     */
+    public function setAuthSession($data)
+    {
+        $_SESSION['user_session']    = $data['username'];
+        $_SESSION['user_admin']      = $data['admin'];
+        $_SESSION['user_supportpin'] = $data['supportpin'];
+        $_SESSION['user_id']         = $data['id'];
+        $_SESSION['user_2fa']        = $data['authused'];
+        $_SESSION['user_uses_old_account_identifier'] = $data['uses_old_account_identifier'];
+    }
 
     /**
      * Get 2fa one code.
@@ -279,7 +350,61 @@ class User {
 		}
 
 	}
-                     
+
+    /**
+     * Set initial password for user without updating 2FA secret.
+     * 
+     * @param  int    $userId
+     * @param  string $password
+     * @return boolean|string true or error description.
+     */
+	public function setPassword($userId, $password)
+	{
+        $password = password_hash($password, PASSWORD_BCRYPT, [
+            'cost' => 12,
+        ]);
+
+        $stmt = $this->mysqli->prepare("UPDATE users SET password=?,password_old_md5=NULL,supportpin='" . rand(10000,99999) . "' WHERE id=?");
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('si', $password, $userId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if (!$result) {
+            return $stmt->error;
+        }
+
+        return true;
+	}
+
+    /**
+     * Clears the token allowing the user to set his password.
+     * 
+     * @param  int    $userId
+     * @return boolean|string true or error description.
+     */
+	public function clearSetPasswordToken($userId)
+	{
+        $stmt = $this->mysqli->prepare("UPDATE users SET set_password_token=NULL,set_password_before=NULL WHERE id=?");
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('i', $userId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if (!$result) {
+            return $stmt->error;
+        }
+
+        return true;
+	}
 
 	function adminGetUserList()
 	{
@@ -291,14 +416,29 @@ class User {
 		while ($user = $users->fetch_assoc())
 
 		{
-			if (!in_array($user['id'], config('app', 'hide_ids')))
-
-			{
+			if (!in_array($user['id'], config('app', 'hide_ids'))) {
+                $user['alert_flag'] = $this->shouldBeAwareOfUser($user);
 				$return[] = $user;
 			}
 		}
 		return $return;
-	}
+    }
+    
+    /**
+     * Should you, as an admin, be aware of this user?
+     * 
+     * @param  array   $user
+     * @return boolean
+     */
+    protected function shouldBeAwareOfUser($user)
+    {
+        // User has not received bounty yet.
+        if ($user['bounty_signup'] && is_null($user['bounty_received_at'])) {
+            return true;
+        }
+
+        return false;
+    }
 
 
 	function adminGetUserInfo($id)

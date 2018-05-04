@@ -7,6 +7,11 @@ if (!empty($msg))
 {
     echo "<p style='font-weight: bold; color: green;'>" . $msg['message']; "</p>";
 }
+
+if (\Models\Flash::has('flashNotice')) {
+    echo "<p style='font-weight: bold; color: green;'>" . \Models\Flash::showOnce('flashNotice') . "</p>";
+}
+
 ?>
 <a href="/" class="btn btn-default">Go back to wallet</a>
 <br /><br />
@@ -14,6 +19,7 @@ if (!empty($msg))
 <table class="table table-bordered table-striped" id="userlist">
 <thead>
    <tr>
+      <td nowrap></td>
       <td nowrap>Username</td>
       <td nowrap>Created</td>
       <td nowrap>Is admin?</td>
@@ -27,6 +33,7 @@ if (!empty($msg))
    <?php
    foreach($userList as $user) {
       echo '<tr>
+               <td>' . ($user['alert_flag'] ? '<div class="alert-icon"></div>' : '') . '</td>
                <td>' . $user['username'] . '</td>
                <td>' . $user['date'] . '</td>
                <td>' . ($user['admin'] ? '<strong>Yes</strong> <a href="/admin?i=' . $user['id'] . '" data-method="delete">De-admin</a>' : 'No <a href="/admin?i=' . $user['id'] . '" data-method="post" onclick="alert(\'Please be aware, that you are now making a user admin.\')">Make admin</a>') . '</td>

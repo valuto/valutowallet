@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Models\Client;
+use Services\ValutoDaemon\Client;
 use Models\User;
 
 class WalletController extends Controller
@@ -21,18 +21,18 @@ class WalletController extends Controller
     public function newaddress()
     {
         $json = array();
-        $this->client->getnewaddress($_SESSION['user_session']);
+        $this->client->getnewaddress();
         $json['success'] = true;
         $json['message'] = "A new address was added to your wallet";
-        $jsonbal         = $this->client->getBalance($_SESSION['user_session']);
-        $jsonbalreserve  = $this->client->getBalance($_SESSION['user_session']) - config('app', 'reserve');
+        $jsonbal         = $this->client->getBalance();
+        $jsonbalreserve  = $this->client->getBalance() - config('app', 'reserve');
         if ($jsonbalreserve < 0) {
             $json['balance'] = $jsonbal;
         } else {
             $json['balance'] = $jsonbalreserve;}
         $json['balance']         = $jsonbal;
-        $json['addressList']     = $this->client->getAddressList($_SESSION['user_session']);
-        $json['transactionList'] = $this->client->getTransactionList($_SESSION['user_session']);
+        $json['addressList']     = $this->client->getAddressList();
+        $json['transactionList'] = $this->client->getTransactionList();
 
         return json_encode($json);
     }
@@ -44,8 +44,8 @@ class WalletController extends Controller
     {
         $json = array();
 
-        $noresbal   = $this->client->getBalance($_SESSION['user_session']);
-        $resbalance = $this->client->getBalance($_SESSION['user_session']) - config('app', 'reserve');
+        $noresbal   = $this->client->getBalance();
+        $resbalance = $this->client->getBalance() - config('app', 'reserve');
         if ($resbalance < 0) {
             $balance = $noresbal; //Don't show the user a negitive balance if they have no coins with us
         } else {
@@ -64,14 +64,14 @@ class WalletController extends Controller
         } elseif ($_POST['amount'] > $balance) {
             $json['message'] = lang('WALLET_WITHDRAW_BALANCE') . config('app', 'reserve') . ' ' . config('app', 'short');
         } else {
-            $withdraw_message        = $this->client->withdraw($_SESSION['user_session'], $_POST['address'], (float) $_POST['amount']);
+            $withdraw_message        = $this->client->withdraw($_POST['address'], (float) $_POST['amount']);
             $_SESSION['token']       = sha1('@s%a$l£t#' . rand(0, 10000));
             $json['newtoken']        = $_SESSION['token'];
             $json['success']         = true;
             $json['message']         = lang('WALLET_WITHDRAW_SUCCESSFUL');
-            $json['balance']         = $this->client->getBalance($_SESSION['user_session']);
-            $json['addressList']     = $this->client->getAddressList($_SESSION['user_session']);
-            $json['transactionList'] = $this->client->getTransactionList($_SESSION['user_session']);
+            $json['balance']         = $this->client->getBalance();
+            $json['addressList']     = $this->client->getAddressList();
+            $json['transactionList'] = $this->client->getTransactionList();
         }
         return json_encode($json);
     }

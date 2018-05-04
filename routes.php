@@ -2,6 +2,9 @@
 
 $route = new \Router\Route();
 
+/**
+ * Administration.
+ */
 $route->get('admin', 'Controllers\AdminController@index')->middleware(['auth', 'admin']);
 $route->delete('admin', 'Controllers\AdminController@destroy')->middleware(['auth', 'admin']);
 $route->post('admin', 'Controllers\AdminController@store')->middleware(['auth', 'admin']);
@@ -9,9 +12,13 @@ $route->put('admin/unlock', 'Controllers\AdminController@unlock')->middleware(['
 $route->put('admin/lock', 'Controllers\AdminController@lock')->middleware(['auth', 'admin']);
 $route->delete('admin/delete-user', 'Controllers\AdminController@deleteUser')->middleware(['auth', 'admin']);
 $route->get('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin']);
-$route->post('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin']); // Make post route accesible until refactoring of that controller method is done
+$route->post('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin', 'csrf']); // Make post route accesible until refactoring of that controller method is done
+$route->post('admin/bounty/signup/payout', 'Controllers\AdminBountyController@store')->middleware(['auth', 'admin', 'csrf']);
 
-$route->get('', 'Controllers\DashboardController@index')->middleware('auth');
+/**
+ * Wallet.
+ */
+$route->if(authed())->get('', 'Controllers\DashboardController@index')->middleware('auth');
 $route->post('accept-disclaimer', 'Controllers\DashboardController@acceptDisclaimer')->middleware('auth');
 $route->put('lang', 'Controllers\LanguageController@update');
 
@@ -28,5 +35,18 @@ $route->get('qrcode', 'Controllers\QrcodeController@show')->middleware('auth');
 $route->post('auth/login', 'Controllers\Auth\LoginController@store')->middleware('recaptcha');
 $route->post('auth/logout', 'Controllers\Auth\LoginController@destroy');
 $route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware('recaptcha');
+
+/**
+ * Frontpage.
+ */
 $route->get('', 'Controllers\HomeController@index');
 $route->get('index.php', 'Controllers\HomeController@redirect');
+
+/**
+ * API version 1.
+ */
+$route->post('api/v1/access-token', 'Controllers\Api\V1\Auth\AccessTokenController@store');
+$route->get('api/v1/user', 'Controllers\Api\V1\UserCheckController@show')->middleware('apiauth');
+$route->post('api/v1/user', 'Controllers\Api\V1\UserCreateController@store')->middleware('apiauth');
+$route->get('api/v1/user/activate', 'Controllers\Api\V1\UserActivateController@show');
+$route->post('api/v1/user/activate', 'Controllers\Api\V1\UserActivateController@store')->middleware('recaptcha');

@@ -1,3 +1,10 @@
+<?php
+
+if (\Models\Flash::has('flashNotice')) {
+    echo "<p style='font-weight: bold; color: green;'>" . \Models\Flash::showOnce('flashNotice') . "</p>";
+}
+
+?>
 <a href="/admin" class="btn btn-default">Go back to admin home</a>
 <br /><br />
 <?php
@@ -26,16 +33,33 @@ if (!empty($info) && is_array($info))
 <br />
 <p>Set new password:</p>
 <form action="<?php echo '/admin/info?i=' . $info['id']; ?>" method="POST" class="clearfix" id="pwdform">
+    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
     <input type="hidden" name="jsaction" value="password" />
     <div class="col-md-4"><input type="password" class="form-control" name="password" placeholder="New password"></div>
     <div class="col-md-2"><button type="submit" class="btn btn-default">Change password</button></div>
 </form>
 <p id="pwdmsg"></p>
+
+<br />
+<p>Bounty:</p>
+<?php if ($info['bounty_signup'] && is_null($info['bounty_received_at'])): ?>
+<form action="/admin/bounty/signup/payout" method="POST" id="payoutbounty">
+    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+    <input type="hidden" name="user_id" value="<?php echo $info['id']; ?>" />
+    <button type="submit" class="btn btn-default btn-green" onclick="this.form.submit(); this.disabled=true; this.value='Processing…';">Payout bounty of <?php echo (float)config('bounty', 'payout_amount'); ?> VLU</button>
+</form>
+<?php elseif ($info['bounty_signup']): ?>
+<p>Bounty paid out on <?php echo $info['bounty_received_at']; ?></p>
+<?php else: ?>
+<p>User did not signup through the bounty program.</p>
+<?php endif; ?>
+
 <br />
 <p>Addresses:</p>
 <form action="<?php echo '/admin/info?i=' . $info['id']; ?>" method="POST" id="newaddressform">
-   <input type="hidden" name="jsaction" value="new_address" />
-   <button type="submit" class="btn btn-default">Get a new address</button>
+    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+    <input type="hidden" name="jsaction" value="new_address" />
+    <button type="submit" class="btn btn-default">Get a new address</button>
 </form>
 <p id="newaddressmsg"></p>
 <br />

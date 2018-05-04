@@ -7,13 +7,13 @@ return [
      * 
      * @var string
      */
-    'site_key' => '',
+    'site_key' => env('CAPTCHA_PUBLIC_SITE_KEY'),
 
     /**
-     * Public site key.
+     * Secret key.
      * 
      * @var string
      */
-    'secret_key' => '',
+    'secret_key' => env('CAPTCHA_SECRET_KEY'),
 
 ];

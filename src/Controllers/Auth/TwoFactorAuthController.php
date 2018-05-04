@@ -50,6 +50,8 @@ class TwoFactorAuthController extends Controller
 
         $_SESSION['secret_key_not_verified'] = $secret;
 
+        Flash::delete('showNotice');
+
         return json_encode([
             'secret' => $secret,
             'qrcode' => $qrcode,
@@ -121,6 +123,8 @@ class TwoFactorAuthController extends Controller
 
         $_SESSION['user_2fa'] = 0;
         unset($_SESSION['secret_key_not_verified']);
+
+        Flash::delete('showNotice');
 
         return $disauth;
     }

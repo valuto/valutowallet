@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Models\Client;
+use Factories\ClientFactory;
 
 class Controller
 {
@@ -17,7 +17,7 @@ class Controller
      */
     public function __construct()
     {
-        $this->client = new Client(config('services', 'rpc')['host'], config('services', 'rpc')['port'], config('services', 'rpc')['username'], config('services', 'rpc')['password']);
+        $this->client = ClientFactory::build();
     }
 
 }

@@ -110,6 +110,9 @@ return [
     'WALLET_TRANSACTIONS_TABLE_RECEIVED' => 'Empfangen',
     'WALLET_TRANSACTIONS_TABLE_SENT' => 'Geschickt',
     'WALLET_TRANSACTIONS_TABLE_INFO' => 'Info',
+    'WALLET_NOTICE_ENABLE_2FA' => 'Two-factor authentication is an extra layer of security for your wallet account. Please enable two-factor authentication under the tab "Account".',
+    'WALLET_NOTICE_UPDATE_PASSWORD' => 'Please update your password from the "Account" tab',
+    'WALLET_NOTICE_BOUNTY_PENDING' => 'Your bounty is being processed and will be transferred to your account soon! Thanks for signing up for Valutowallet/VLU Market!',
 
     // Disclaimer
 
@@ -181,5 +184,10 @@ If you enter your private key on a phishing website, you will have all your fund
 <strong>Protect your keys & always check that you are on the correct URL when entering them.<br>
 You are as a user of valutowallet.com responsible for the security of your funds.</strong>',
     'WALLET_DISCLAIMER_STEP6_ACCEPT' => 'Understood',
+
+    // User activation
+    'USER_ACTIVATION_TOKEN_FAILED' => 'Your activation failed. Either you waited too long from initial signup, or you have supplied a wrong activation token.',
+    'FORM_ACTIVATION_HEADLINE' => 'Choose password',
+    'FORM_ACTIVATE' => 'Activate',
 
 ];

@@ -28,14 +28,9 @@ class LoginController extends Controller
             return redirect('');
 
         } else {
-            $_SESSION['user_session']    = $result['username'];
-            $_SESSION['user_admin']      = $result['admin'];
-            $_SESSION['user_supportpin'] = $result['supportpin'];
-            $_SESSION['user_id']         = $result['id'];
-            $_SESSION['user_2fa']        = $result['authused'];
-            $_SESSION['user_uses_old_account_identifier'] = $result['uses_old_account_identifier'];
+            $user->setAuthSession($result);
             if (is_null($result['password'])) {
-                Flash::save('promptupdatepw', '1');
+                Flash::save('showNotice', lang('WALLET_PLEASE_UPDATE_PASSWORD'));
             }
             $mysqli->close();
             return redirect('');
