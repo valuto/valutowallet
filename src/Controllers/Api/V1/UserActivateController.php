@@ -5,7 +5,7 @@ namespace Controllers\Api\V1;
 use Psr\Http\Message\ServerRequestInterface;
 use Controllers\Controller;
 use Models\User;
-use Models\Client;
+use Services\ValutoDaemon\Client;
 use Services\Bounty\Signup\User as UserBounty;
 
 class UserActivateController extends Controller

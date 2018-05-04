@@ -5,7 +5,7 @@ return [
     /**
      * ENTER WEBSITE URL ALONG WITH A TRAILING SLASH
      */
-    'server_url' => 'valutowallet.local/',
+    'server_url' => env('SERVER_URL', 'valutowallet.local/'),
 
     /**
      * Default language

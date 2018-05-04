@@ -7,22 +7,22 @@ return [
         /**
          * Host
          */
-        'host' => "127.0.0.1",
+        'host' => env('VALUTORPC_HOST', "127.0.0.1"),
 
         /**
          * Port
          */
-        'port' => "40332",
+        'port' => env('VALUTORPC_PORT', "40332"),
 
         /**
          * Username
          */
-        'username' => "valutorpc",
+        'username' => env('VALUTORPC_USER', "valutorpc"),
 
         /**
          * Password
          */
-        'password' => "",
+        'password' => env('VALUTORPC_PASSWORD'),
 
     ],
 

@@ -3,7 +3,7 @@
 namespace Controllers;
 
 use Models\User;
-use Models\Client;
+use Services\ValutoDaemon\Client;
 use Models\Flash;
 
 class DashboardController extends Controller
@@ -12,22 +12,19 @@ class DashboardController extends Controller
     {
         global $mysqli;
 
-        $admin        = false;
-        if (!empty($_SESSION['user_admin']) && $_SESSION['user_admin'] == 1) {
-            $admin = true;
-        }
-        $error        = array('type' => "none", 'message' => "");
+        $admin = (!empty($_SESSION['user_admin']) && $_SESSION['user_admin'] == 1);
+        $error = array('type' => "none", 'message' => "");
 
-        $noresbal   = $this->client->getBalance($_SESSION['user_session']);
-        $resbalance = $this->client->getBalance($_SESSION['user_session']) - config('app', 'reserve');
+        $noresbal   = $this->client->getBalance();
+        $resbalance = $this->client->getBalance() - config('app', 'reserve');
         if ($resbalance < 0) {
             $balance = $noresbal; //Don't show the user a negitive balance if they have no coins with us
         } else {
             $balance = $resbalance;
         }
 
-        $addressList     = $this->client->getAddressList($_SESSION['user_session']);
-        $transactionList = $this->client->getTransactionList($_SESSION['user_session']);
+        $addressList     = $this->client->getAddressList();
+        $transactionList = $this->client->getTransactionList();
         $twofactorenabled = isset($_SESSION['user_2fa']) && $_SESSION['user_2fa'];
 
         $user = (new User($mysqli))->getUserByUsername($_SESSION['user_session']);
@@ -35,7 +32,7 @@ class DashboardController extends Controller
         (new \Services\Bounty\Signup\User())->showBountyPending($user);
 
         if ( ! $twofactorenabled && ! Flash::has('showNotice')) {
-            Flash::save('showNotice', lang('WALLET_NOTICE_UPDATE_PASSWORD'));
+            Flash::save('showNotice', lang('WALLET_NOTICE_ENABLE_2FA'));
         }
 
         include __DIR__ . "/../../view/header.php";

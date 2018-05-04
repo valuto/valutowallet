@@ -10,7 +10,7 @@ class User
     /**
      * RPC client instance.
      * 
-     * @var Models\Client
+     * @var Services\ValutoDaemon\Client
      */
     protected $client;
 
@@ -38,7 +38,7 @@ class User
         }
 
         if ((int)$user['bounty_signup'] === 1) {
-            $this->client->getnewaddress($user['username']);
+            $this->client->getnewaddress();
         }
 
         return true;

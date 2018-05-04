@@ -15,6 +15,12 @@ $error_handler->registerErrorHandler();
 $error_handler->registerShutdownFunction();
 
 /**
+ * Load .env file.
+ */
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
+$dotenv->load();
+
+/**
  * Load routes.
  */
 require __DIR__ . '/../routes.php';

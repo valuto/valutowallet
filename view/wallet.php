@@ -63,7 +63,6 @@ if ($admin)
     <!-- Your addresses -->
     <div style="overflow: hidden;">
       <p><strong><?php echo lang('WALLET_USERADDRESSES'); ?></strong></p>
-      <p id="newaddressmsg"></p>
       <table class="table table-bordered table-striped" id="alist">
         <thead>
             <tr>
@@ -81,6 +80,7 @@ if ($admin)
       <form action="/wallet/newaddress" method="POST" id="newaddressform">
         <button type="submit" class="btn btn-default"><?php echo lang('WALLET_NEWADDRESS'); ?></button>
       </form>
+      <p id="newaddressmsg" style="float: left;"></p>
     </div>
 
     <!-- Last 10 transactions -->

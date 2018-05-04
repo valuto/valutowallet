@@ -2,7 +2,7 @@
 
 namespace Factories;
 
-use Models\Client;
+use Services\ValutoDaemon\Client;
 
 class ClientFactory
 {
@@ -10,7 +10,7 @@ class ClientFactory
     /**
      * Construct requested class.
      *
-     * @return Models\Client
+     * @return Services\ValutoDaemon\Client
      */
     public static function build()
     {

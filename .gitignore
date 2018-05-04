@@ -1,1 +1,3 @@
 qrgen/phpqrcode/cache
+/vendor
+.env
