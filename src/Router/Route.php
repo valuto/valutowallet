@@ -68,17 +68,6 @@ class Route
     }
 
     /**
-     * Options route
-     * 
-     * @param string $uri
-     * @param string $action
-     */
-    public function options($uri, $action)
-    {
-        return $this->addRoute('GET', $uri, $action);
-    }
-
-    /**
      * Get route
      * 
      * @param string $uri
