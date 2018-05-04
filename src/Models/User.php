@@ -416,14 +416,29 @@ class User {
 		while ($user = $users->fetch_assoc())
 
 		{
-			if (!in_array($user['id'], config('app', 'hide_ids')))
-
-			{
+			if (!in_array($user['id'], config('app', 'hide_ids'))) {
+                $user['alert_flag'] = $this->shouldBeAwareOfUser($user);
 				$return[] = $user;
 			}
 		}
 		return $return;
-	}
+    }
+    
+    /**
+     * Should you, as an admin, be aware of this user?
+     * 
+     * @param  array   $user
+     * @return boolean
+     */
+    protected function shouldBeAwareOfUser($user)
+    {
+        // User has not received bounty yet.
+        if ($user['bounty_signup'] && is_null($user['bounty_received_at'])) {
+            return true;
+        }
+
+        return false;
+    }
 
 
 	function adminGetUserInfo($id)

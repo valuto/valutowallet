@@ -12,7 +12,8 @@ $route->put('admin/unlock', 'Controllers\AdminController@unlock')->middleware(['
 $route->put('admin/lock', 'Controllers\AdminController@lock')->middleware(['auth', 'admin']);
 $route->delete('admin/delete-user', 'Controllers\AdminController@deleteUser')->middleware(['auth', 'admin']);
 $route->get('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin']);
-$route->post('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin']); // Make post route accesible until refactoring of that controller method is done
+$route->post('admin/info', 'Controllers\AdminController@info')->middleware(['auth', 'admin', 'csrf']); // Make post route accesible until refactoring of that controller method is done
+$route->post('admin/bounty/signup/payout', 'Controllers\AdminBountyController@store')->middleware(['auth', 'admin', 'csrf']);
 
 /**
  * Wallet.

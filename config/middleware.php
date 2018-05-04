@@ -11,5 +11,6 @@ return [
     'recaptcha' => \Middlewares\Recaptcha::class,
     'apiauth'   => \Middlewares\ApiAuthenticate::class,
     'apicors'   => \Middlewares\ApiCors::class,
+    'csrf'      => \Middlewares\CsrfToken::class,
 
 ];

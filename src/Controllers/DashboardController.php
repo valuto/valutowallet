@@ -49,6 +49,6 @@ class DashboardController extends Controller
     {
         Flash::delete('showdisclaimer');
 
-        return json_encode(['success' => true]);
+        return json('success', true);
     }
 }

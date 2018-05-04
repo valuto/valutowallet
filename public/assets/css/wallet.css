@@ -241,6 +241,19 @@ a:hover, .btn-link:hover {
 
 }
 
+.alert-icon {
+    margin: auto;
+    width: 16px;
+    height: 16px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA50lEQVQ4T6XTPy6FQRSG8d8NemILROJPLEFHgR1YAQpWguSqFXqFUNBagYhC2ILQI+QkMzImcz/3Mt0355lnznzvTM/gMYEbfGAF7y201yHYw0Gq7+J4FME0njCZFj1jFi+1ZFAHsdt2BR8huvoxWoIF3GKsYt+whIdyviW4wmqCcv0zfV9io0uwjosCqAVRWsN1ZsoOIrY7zP0iuMdyilcpKGOrN8hHyPPfsWZBxPaIqY57UZYi1hm8ZkEfO43FrX+QsUPsBzCfYhsfURCxLobgHJtDtl5jZyE4xdYfBSddj2ko578FX8RMJoLN7supAAAAAElFTkSuQmCC');
+}
+
+.btn-green,
+.btn-green:active,
+.btn-green:hover {
+    background-color: lightgreen;
+    color: white;
+}
 
 /**
  * Loader

@@ -156,3 +156,21 @@ if (!function_exists('env')) {
     }
 
 }
+
+if (!function_exists('json')) {
+
+    /**
+     * Create simple JSON response string.
+     * 
+     * @param  string $type  e.g. 'success' or 'error'
+     * @param  string $value 
+     * @return string
+     */
+    function json($type, $value)
+    {
+        return json_encode([
+            $type => $value,
+        ]);
+    }
+
+}

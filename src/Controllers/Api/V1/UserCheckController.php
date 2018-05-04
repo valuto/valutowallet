@@ -27,8 +27,6 @@ class UserCheckController extends Controller
             $result = $user->getUserByEmail($params['email']);
         }
 
-        return json_encode([
-            'exists' => (bool)$result,
-        ]);
+        return json('exists', (bool)$result);
     }
 }
