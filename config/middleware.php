@@ -10,5 +10,6 @@ return [
     'admin'     => \Middlewares\Administrator::class,
     'recaptcha' => \Middlewares\Recaptcha::class,
     'apiauth'   => \Middlewares\ApiAuthenticate::class,
+    'apicors'   => \Middlewares\ApiCors::class,
 
 ];

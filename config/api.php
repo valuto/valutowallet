@@ -40,6 +40,13 @@ return [
     'ip_whitelist' => [],
 
     /**
+     * Only allow access from this list of origins.
+     * 
+     * @var array
+     */
+    'cors_whitelist' => [],
+
+    /**
      * List of clients allowed to access the API.
      * 
      * @var array

@@ -10,6 +10,7 @@
     "require": {
         "defuse/php-encryption": "^2.1",
         "league/oauth2-server": "^7.1",
-        "guzzlehttp/psr7": "^1.4"
+        "guzzlehttp/psr7": "^1.4",
+        "sentry/sentry": "^1.9"
     }
 }

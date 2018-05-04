@@ -2,12 +2,12 @@
 
 namespace Controllers;
 
+use Models\User;
 use Models\Client;
 use Models\Flash;
 
 class DashboardController extends Controller
 {
-
     public function index()
     {
         global $mysqli;
@@ -29,6 +29,14 @@ class DashboardController extends Controller
         $addressList     = $this->client->getAddressList($_SESSION['user_session']);
         $transactionList = $this->client->getTransactionList($_SESSION['user_session']);
         $twofactorenabled = isset($_SESSION['user_2fa']) && $_SESSION['user_2fa'];
+
+        $user = (new User($mysqli))->getUserByUsername($_SESSION['user_session']);
+
+        (new \Services\Bounty\Signup\User())->showBountyPending($user);
+
+        if ( ! $twofactorenabled && ! Flash::has('showNotice')) {
+            Flash::save('showNotice', lang('WALLET_NOTICE_UPDATE_PASSWORD'));
+        }
 
         include __DIR__ . "/../../view/header.php";
         include __DIR__ . "/../../view/wallet.php";

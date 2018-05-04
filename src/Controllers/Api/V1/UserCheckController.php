@@ -20,7 +20,12 @@ class UserCheckController extends Controller
         $params = $request->getQueryParams();
 
         $user   = new User($mysqli);
-        $result = $user->getUserByUsername($params['username']);
+
+        if (isset($params['username'])) {
+            $result = $user->getUserByUsername($params['username']);
+        } elseif (isset($params['email'])) {
+            $result = $user->getUserByEmail($params['email']);
+        }
 
         return json_encode([
             'exists' => (bool)$result,

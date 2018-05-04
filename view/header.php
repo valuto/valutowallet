@@ -118,7 +118,7 @@
 									<a href="#" onclick="document.getElementById('logoutForm').submit();" title="<?php echo lang('MASTER_MENU_LOGOUT'); ?>"><?php echo lang('MASTER_MENU_LOGOUT'); ?></a>
 								</li>
 							<?php else: ?>
-								<li class="active"><a href="#loginSection" title="<?php echo lang('MASTER_MENU_LOGIN'); ?>"><?php echo lang('MASTER_MENU_LOGIN'); ?></a></li>
+								<li class="active"><a href="/#loginSection" title="<?php echo lang('MASTER_MENU_LOGIN'); ?>"><?php echo lang('MASTER_MENU_LOGIN'); ?></a></li>
 								<li><a href="#signupSection" title="<?php echo lang('MASTER_MENU_SIGNUP'); ?>"><?php echo lang('MASTER_MENU_SIGNUP'); ?></a></li>
 								<li><a href="#" title="<?php echo lang('MASTER_MENU_ABOUT'); ?>"><?php echo lang('MASTER_MENU_ABOUT'); ?></a></li>
 								<li><a href="#" title="<?php echo lang('MASTER_MENU_HELP'); ?>"><?php echo lang('MASTER_MENU_HELP'); ?></a></li>

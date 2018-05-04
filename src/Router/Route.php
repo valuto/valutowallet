@@ -68,6 +68,17 @@ class Route
     }
 
     /**
+     * Options route
+     * 
+     * @param string $uri
+     * @param string $action
+     */
+    public function options($uri, $action)
+    {
+        return $this->addRoute('GET', $uri, $action);
+    }
+
+    /**
      * Get route
      * 
      * @param string $uri
@@ -136,6 +147,10 @@ class Route
      */
     public function resolve()
     {
+        if ( ! isset(self::$routes[$this->request->method()])) {
+            return false;
+        }
+
         foreach ((array) self::$routes[$this->request->method()] as $route) {
             if ($this->request->path() === $route['uri']) {
                 $response = $this->middleware->check($route['middlewares'], function(ServerRequestInterface $request, ResponseInterface $response) use ($route) {

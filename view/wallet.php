@@ -4,15 +4,9 @@ if ($error && !empty($error['message'])) {
 }
 ?>
 
-<?php if(\Models\Flash::has('promptupdatepw')): ?>
+<?php if(\Models\Flash::has('showNotice')): ?>
 <section class="col-md-12" id="walletMessage" style="margin-bottom: 50px !important; background-color: #f29400; color: #fff;">
-    <strong><?php echo lang('WALLET_NOTICE'); ?></strong>&nbsp;&nbsp;Please update your password from the "Account" tab
-</section>
-<?php endif; ?>
-
-<?php if(!$twofactorenabled && ! \Models\Flash::has('promptupdatepw')): ?>
-<section class="col-md-12" id="walletMessage2fa" style="margin-bottom: 50px !important; background-color: #f29400; color: #fff;">
-    <strong><?php echo lang('WALLET_NOTICE'); ?></strong>&nbsp;&nbsp;<?php echo lang('WALLET_NOTICE_ENABLE_2FA'); ?>
+    <strong><?php echo lang('WALLET_NOTICE'); ?></strong>&nbsp;&nbsp;<?php echo \Models\Flash::show('showNotice'); ?>
 </section>
 <?php endif; ?>
 
