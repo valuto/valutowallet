@@ -53,8 +53,8 @@ class User
      */
     public function showBountyPending($user)
     {
-        if ( ! is_null($user['bounty_received_at'])) {
-            return false;
+        if ( ! is_null($user['bounty_received_at']) && (int)$user['bounty_signup'] === 1) {
+            return $this->clearCurrentFlash();
         }
 
         if ((int)$user['bounty_signup'] === 1) {
@@ -62,5 +62,16 @@ class User
         }
 
         return true;
+    }
+
+    public function clearCurrentFlash()
+    {
+        if ( ! Flash::has('showNotice')) {
+            return false;
+        }
+
+        if (Flash::show('showNotice') === lang('WALLET_NOTICE_BOUNTY_PENDING')) {
+            return Flash::delete('showNotice');
+        }
     }
 }
