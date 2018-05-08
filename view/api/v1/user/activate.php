@@ -26,11 +26,11 @@
                 </div>
                 <div class="form-group">
                     <label for="signupPassword"><?php echo lang('FORM_PASS'); ?></label>
-                    <input type="password" name="password" class="form-control" id="signupPassword" placeholder="<?php echo lang('FORM_PASS'); ?>">
+                    <input type="password" name="password" required="required" class="form-control" id="signupPassword" placeholder="<?php echo lang('FORM_PASS'); ?>">
                 </div>
                 <div class="form-group">
                     <label for="signupPasswordConf"><?php echo lang('FORM_PASSCONF'); ?></label>
-                    <input type="password" name="confirmPassword" class="form-control" id="signupPasswordConf" placeholder="<?php echo lang('FORM_PASSCONF'); ?>" aria-describedby="signupPasswordConfHelp">
+                    <input type="password" name="confirmPassword" required="required" class="form-control" id="signupPasswordConf" placeholder="<?php echo lang('FORM_PASSCONF'); ?>" aria-describedby="signupPasswordConfHelp">
                     <small id="signupPasswordConfHelp" class="form-text text-muted"><?php echo lang('FORM_PASSCONF_HELP'); ?></small>
                 </div>
                 <button class="g-recaptcha btn btn-default btn-signup" id="signupsubmitbtn"><?php echo lang('FORM_ACTIVATE'); ?></button>

@@ -79,6 +79,10 @@ class UserActivateController extends Controller
             return $this->renderMessageView(lang('WALLET_REGISTER_PASSWORD_NOT_MATCH'));
         }
 
+        if (empty($params['password'])) {
+            return $this->renderMessageView(lang('WALLET_REGISTER_PASSWORD_NOT_MATCH'));
+        }
+
         $model->setPassword($userId, $params['password']);
         $model->clearSetPasswordToken($userId);
 

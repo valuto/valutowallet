@@ -11,7 +11,7 @@
 
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/assets/css/wallet.css?v=4" rel="stylesheet">
+        <link href="/assets/css/wallet.css?v=5" rel="stylesheet">
         <link href="/assets/css/disclaimer.css?v=3" rel="stylesheet">
 		<link href="/assets/css/languages.min.css" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600" rel="stylesheet">
