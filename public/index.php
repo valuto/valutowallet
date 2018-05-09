@@ -6,19 +6,19 @@ header('Cache-control: private'); // IE 6 FIX
 require __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Sentry error reporting.
- */
-$client = new Raven_Client(config('sentry', 'auth_url'));
-$error_handler = new Raven_ErrorHandler($client);
-$error_handler->registerExceptionHandler();
-$error_handler->registerErrorHandler();
-$error_handler->registerShutdownFunction();
-
-/**
  * Load .env file.
  */
 $dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
 $dotenv->load();
+
+/**
+ * Sentry error reporting.
+ */
+$sentryClient = new Raven_Client(config('sentry', 'auth_url'));
+$error_handler = new Raven_ErrorHandler($sentryClient);
+$error_handler->registerExceptionHandler();
+$error_handler->registerErrorHandler();
+$error_handler->registerShutdownFunction();
 
 /**
  * Load routes.
