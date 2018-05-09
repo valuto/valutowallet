@@ -30,7 +30,7 @@ class LoginController extends Controller
         } else {
             $user->setAuthSession($result);
             if (is_null($result['password'])) {
-                Flash::save('showNotice', lang('WALLET_PLEASE_UPDATE_PASSWORD'));
+                Flash::save('showNotice', lang('WALLET_NOTICE_UPDATE_PASSWORD'));
             }
             $mysqli->close();
             return redirect('');
