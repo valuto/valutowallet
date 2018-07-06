@@ -22,11 +22,7 @@ class UserProfileController extends UserApiController
         $user = $this->user->getUserById($this->userId);
         
         if ( ! $user) {
-            return json_encode([
-                'status' => 'error',
-                'error' => 'user_not_found',
-                'message' => 'The user supplied in the access token was not found in the database.',
-            ]);
+            return $this->userNotFound();
         }
 
         return json_encode([

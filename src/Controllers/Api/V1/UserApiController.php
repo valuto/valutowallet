@@ -4,6 +4,7 @@ namespace Controllers\Api\V1;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Controllers\Controller;
+use Factories\ClientFactory;
 use Models\User;
 use Exception;
 
@@ -41,6 +42,7 @@ class UserApiController extends Controller
 
         $this->mysqli = $mysqli;
         $this->user   = new User($this->mysqli);
+        $this->client = ClientFactory::build();
     }
     
     /**
@@ -56,5 +58,19 @@ class UserApiController extends Controller
         if (empty($this->userId)) {
             throw new Exception('User ID not found in access token.');
         }
+    }
+
+    /**
+     * User not found response.
+     * 
+     * @return string  the JSON response.
+     */
+    protected function userNotFound()
+    {
+        return json_encode([
+            'status' => 'error',
+            'error' => 'user_not_found',
+            'message' => 'The user supplied in the access token was not found in the database.',
+        ]);
     }
 }
