@@ -14,12 +14,30 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 class UserEntity implements UserEntityInterface
 {
     /**
+     * The user.
+     * 
+     * @var array
+     */
+    protected $user;
+
+    /**
+     * Instantiate the entity.
+     * 
+     * @param  array  $user
+     * @return void
+     */
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Return the user's identifier.
      *
      * @return mixed
      */
     public function getIdentifier()
     {
-        return 1;
+        return $this->user['id'];
     }
 }

@@ -3,9 +3,14 @@
 namespace Controllers\Api\V1\Auth;
 
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\CryptKey;
 use Repositories\Authentication\AccessTokenRepository;
+use Repositories\Authentication\RefreshTokenRepository;
 use Repositories\Authentication\ClientRepository;
+use Repositories\Authentication\UserRepository;
 use Repositories\Authentication\ScopeRepository;
 use Controllers\Controller;
 use Models\Flash;
@@ -14,9 +19,17 @@ use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use Router\Request;
+use DateInterval;
 
 class AccessTokenController extends Controller
 {
+    /**
+     * The server object.
+     * 
+     * @var AuthorizationServer
+     */
+    protected $server;
+
     /**
      * Create access token.
      * 
@@ -24,11 +37,6 @@ class AccessTokenController extends Controller
      */
     public function store()
     {
-        // Init our repositories
-        $clientRepository = new ClientRepository(); // instance of ClientRepositoryInterface
-        $scopeRepository = new ScopeRepository(); // instance of ScopeRepositoryInterface
-        $accessTokenRepository = new AccessTokenRepository(); // instance of AccessTokenRepositoryInterface
-
         // Path to public and private keys
         if (config('api', 'private_key_passphrase')) {
             $privateKey = new CryptKey(config('api', 'private_key_path'), config('api', 'private_key_passphrase'));
@@ -37,33 +45,66 @@ class AccessTokenController extends Controller
         }
 
         // Setup the authorization server
-        $server = new \League\OAuth2\Server\AuthorizationServer(
-            $clientRepository,
-            $accessTokenRepository,
-            $scopeRepository,
+        $this->server = new AuthorizationServer(
+            new ClientRepository(),
+            new AccessTokenRepository(),
+            new ScopeRepository(),
             $privateKey,
             config('api', 'encryption_key')
         );
 
         // Enable the client credentials grant on the server
-        $server->enableGrantType(
-            new \League\OAuth2\Server\Grant\ClientCredentialsGrant(),
-            new \DateInterval(config('api', 'access_token_expiration')) // access tokens expiration time
-        );
-
+        $this->enableClientCredentialsGrant();
+        
+        // Enable the password grant on the server
+        $this->enablePasswordGrant();
+        
         $response = new Response();
         $request  = ServerRequest::fromGlobals();
 
         try {
         
             // Try to respond to the request
-            return $server->respondToAccessTokenRequest($request, $response)->getBody();
+            return $this->server->respondToAccessTokenRequest($request, $response)->getBody();
             
-        } catch (\League\OAuth2\Server\Exception\OAuthServerException $exception) {
+        } catch (OAuthServerException $exception) {
         
             // All instances of OAuthServerException can be formatted into a HTTP response
             return $exception->generateHttpResponse($response)->getBody();
             
         }
+    }
+
+    /**
+     * Enable client credentials grant.
+     * 
+     * @return void
+     */
+    protected function enableClientCredentialsGrant()
+    {
+        $this->server->enableGrantType(
+            new ClientCredentialsGrant(),
+            new DateInterval(config('api', 'access_token_expiration')) // access tokens expiration time
+        );
+    }
+
+    /**
+     * Enable password grant.
+     * 
+     * @return void
+     */
+    protected function enablePasswordGrant()
+    {
+        $passwordGrant = new PasswordGrant(
+            new UserRepository(),           // instance of UserRepositoryInterface
+            new RefreshTokenRepository()    // instance of RefreshTokenRepositoryInterface
+        );
+        $passwordGrant->setRefreshTokenTTL(new DateInterval('P1M')); // refresh tokens will expire after 1 month
+
+        // Enable the password grant on the server with a token TTL of 1 hour
+        $this->server->enableGrantType(
+            $passwordGrant,
+            new DateInterval('PT1H') // access tokens will expire after 1 hour
+        );
     }
 }

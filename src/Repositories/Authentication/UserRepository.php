@@ -11,13 +11,31 @@ namespace Repositories\Authentication;
 
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\UserEntityInterface;
+use Entities\Authentication\UserEntity;
+use Models\User;
 
 /**
  * User repository.
  */
 class UserRepository implements UserRepositoryInterface
 {
+    /**
+     * The user model instance.
+     * 
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * Instantiate repository.
+     */
+    public function __construct()
+    {
+        global $mysqli;
+
+        $this->user = new User($mysqli);
+    }
+
     /**
      * Get a user entity.
      *
@@ -35,22 +53,16 @@ class UserRepository implements UserRepositoryInterface
         ClientEntityInterface $clientEntity
     )
     {
-        foreach (config('api.clients') as $client) {
+        $user = $this->user->getUserByUsername($username);
 
-            if (empty($client['client_id'])) {
-                continue;
-            }
-
-            if (empty($client['client_secret'])) {
-                continue;
-            }
-
-            if ($username === $client['client_id'] && $password === $client['client_secret']) {
-                return new UserEntity();
-            }
-
+        if ( ! $this->user->isActive($user)) {
+            return false;
         }
 
-        return;
+        if ( ! $this->user->verifyPasswordMatch($password, $user)) {
+            return false;
+        }
+
+        return new UserEntity($user);
     }
 }

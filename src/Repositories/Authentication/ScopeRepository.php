@@ -13,12 +13,32 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use Entities\Authentication\ScopeEntity;
+use Models\Role;
+use Models\User;
+use Exception;
 
 /**
  * Scope repository.
  */
 class ScopeRepository implements ScopeRepositoryInterface
 {
+    /**
+     * The user model instance.
+     * 
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * Instantiate repository.
+     */
+    public function __construct()
+    {
+        global $mysqli;
+
+        $this->user = new User($mysqli);
+    }
+
     /**
      * Return information about a scope.
      *
@@ -28,17 +48,10 @@ class ScopeRepository implements ScopeRepositoryInterface
      */
     public function getScopeEntityByIdentifier($scopeIdentifier)
     {
-        $scopes = [
-            'usercheck' => [
-                'description' => 'Allows to check if a user exists in the system.',
-            ],
-            'usercreate' => [
-                'description' => 'Allows to create new users.',
-            ],
-        ];
+        $scopes = (new Role())->select('role_id');
 
-        if (array_key_exists($scopeIdentifier, $scopes) === false) {
-            return;
+        if ( ! in_array($scopeIdentifier, $scopes)) {
+            return false;
         }
 
         $scope = new ScopeEntity();
@@ -65,13 +78,43 @@ class ScopeRepository implements ScopeRepositoryInterface
         $userIdentifier = null
     )
     {
-        // Example of programatically modifying the final scope of the access token
-        /*if ((int) $userIdentifier === 1) {
-            $scope = new ScopeEntity();
-            $scope->setIdentifier('email');
-            $scopes[] = $scope;
-        }*/
+        if ($grantType === 'client_credentials') {
 
-        return $scopes;
+            $allRoles = (new Role())->select('role_id');
+
+            // @TODO extend filtering of roles based on client.
+
+            return $this->intersectScopes($scopes, $allRoles);
+
+        } else if ($grantType === 'password') {
+
+            $user   = $this->user->getUserById($userIdentifier);
+            $roles  = $this->user->getRoles($user);
+
+            return $this->intersectScopes($scopes, $roles ? array_column($roles, 'role_id') : []);
+
+        } else {
+
+            throw new Exception('Invalid grant type.');
+
+        }
+    }
+
+    /**
+     * Only return scopes that are both present in $requested and $valid.
+     * 
+     * @param  array $requested  the OAuth2 scopes array containing ScopeEntity-objects.
+     * @param  array $valid      the scopes (roles) valid for the client/user.
+     * @return array
+     */
+    protected function intersectScopes($requested, $valid)
+    {
+        foreach ($requested as $key => $scope) {
+            if ( ! in_array($scope->getIdentifier(), $valid)) {
+                unset($requested[$key]);
+            }
+        }
+        
+        return $requested;
     }
 }

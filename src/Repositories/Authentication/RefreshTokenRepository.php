@@ -12,6 +12,7 @@ namespace Repositories\Authentication;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use Entities\Authentication\RefreshTokenEntity;
 
 /**
  * Refresh token repository.
@@ -19,13 +20,34 @@ use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationExcep
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     /**
+     * Database instance.
+     * 
+     * @var MySQLi
+     */
+    protected $mysqli;
+
+    /**
+     * Constructor.
+     * 
+     * @return void
+     */
+    public function __construct()
+    {
+        global $mysqli;
+        $this->mysqli = $mysqli;
+    }
+
+    /**
      * Creates a new refresh token
      *
      * @return RefreshTokenEntityInterface
      */
     public function getNewRefreshToken()
     {
-
+        $refreshToken = new RefreshTokenEntity();
+        // @TODO
+        // $refreshToken->setAccessToken();
+        return $refreshToken;
     }
 
     /**
@@ -37,7 +59,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-
+        // @TODO
     }
 
     /**
@@ -47,7 +69,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function revokeRefreshToken($tokenId)
     {
-
+        // @TODO
     }
 
     /**
@@ -59,6 +81,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-
+        // @TODO
+        return false;
     }
 }

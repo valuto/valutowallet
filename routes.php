@@ -50,3 +50,12 @@ $route->get('api/v1/user', 'Controllers\Api\V1\UserCheckController@show')->middl
 $route->post('api/v1/user', 'Controllers\Api\V1\UserCreateController@store')->middleware('apiauth');
 $route->get('api/v1/user/activate', 'Controllers\Api\V1\UserActivateController@show');
 $route->post('api/v1/user/activate', 'Controllers\Api\V1\UserActivateController@store')->middleware('recaptcha');
+$route->get('api/v1/user/profile', 'Controllers\Api\V1\UserProfileController@show')->middleware(['apiauth']); // uses user access token
+$route->put('api/v1/user/profile', 'Controllers\Api\V1\UserProfileController@update')->middleware(['apiauth']); // uses user access token
+$route->get('api/v1/user/twofactor', 'Controllers\Api\V1\Auth\UserTwofactorController@enabled')->middleware(['apiauth']); // uses user access token
+$route->post('api/v1/user/twofactor', 'Controllers\Api\V1\Auth\UserTwofactorController@verify')->middleware(['apiauth']); // uses user access token
+$route->get('api/v1/user/account', 'Controllers\Api\V1\x')->middleware(['apiauth']); // uses user access token
+$route->post('api/v1/payment/reserve', 'Controllers\Api\V1\x')->middleware(['apiauth']); // uses user access token
+$route->post('api/v1/payment/release', 'Controllers\Api\V1\x')->middleware(['apiauth']); // uses user access token
+$route->post('api/v1/payment/capture', 'Controllers\Api\V1\x')->middleware(['apiauth']); // uses user access token
+$route->post('api/v1/cashback', 'Controllers\Api\V1\x')->middleware('apiauth'); 

@@ -6,6 +6,7 @@ use Defuse\Crypto\KeyProtectedByPassword;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+use Exception;
 
 class User {
 
@@ -44,6 +45,33 @@ class User {
         }
     }
 
+    /**
+     * Is the user account active? (not deleted, locked etc.)
+     * 
+     * @param  User  $user
+     * @return boolean
+     */
+    public function isActive($user)
+    {
+        if ( ! $user) {
+            return false;
+        }
+
+        if ($user['locked']) {
+            return false;
+        }
+
+        if ( ! is_null($user['deleted_at'])) {
+            return false;
+        }
+
+        if (empty($user['password']) && empty($user['password_old_md5'])) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getUserByUsername($username)
     {
         $stmt = $this->mysqli->prepare('SELECT * FROM users WHERE username=?');
@@ -53,6 +81,27 @@ class User {
         }
 
         $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return $result->fetch_assoc();
+
+    }
+
+    public function getUserById($id)
+    {
+        if (empty($id)) {
+            throw new Exception('No user ID supplied.');
+        }
+
+        $stmt = $this->mysqli->prepare('SELECT * FROM users WHERE id=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
@@ -76,6 +125,30 @@ class User {
 
         return $result->fetch_assoc();
 
+    }
+
+    public function getRoles($user)
+    {
+        $stmt = $this->mysqli->prepare('SELECT r.* FROM user_roles ur INNER JOIN roles r ON r.id=ur.role_id WHERE ur.user_id=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('i', $user['id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+		$collection = [];
+
+		while ($role = $result->fetch_assoc()) {
+            $collection[] = $role;
+        }
+        
+        $result->free();
+
+        return $collection;
     }
 
     /**
@@ -179,7 +252,7 @@ class User {
      * @param  string $password  the password in clear text to use for unlocking the secret.
      * @return int               the one code.
      */
-    protected function get2faOneCode($user, $password)
+    public function get2faOneCode($user, $password)
     {
         return $this->getCode($this->get2faSecret($user, $password));
     }

@@ -12,6 +12,7 @@ namespace Repositories\Authentication;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Entities\Authentication\ClientEntity;
+use Exception;
 
 /**
  * Client storage repository.
@@ -35,7 +36,7 @@ class ClientRepository implements ClientRepositoryInterface
 
         // Check if client is registered
         if (array_key_exists($clientIdentifier, $clients) === false) {
-            return;
+            throw new Exception('Client not found.');
         }
 
         if (
@@ -43,7 +44,11 @@ class ClientRepository implements ClientRepositoryInterface
             && $clients[$clientIdentifier]['is_confidential'] === true
             && password_verify($clientSecret, $clients[$clientIdentifier]['secret']) === false
         ) {
-            return;
+            throw new Exception('Client secret incorrect.');
+        }
+
+        if ( ! in_array($grantType, $clients[$clientIdentifier]['allowed_grant_types'])) {
+            throw new Exception('Client not allowed to use this grant type.');
         }
 
         $client = new ClientEntity();

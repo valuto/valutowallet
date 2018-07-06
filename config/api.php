@@ -53,13 +53,33 @@ return [
      */
     'clients' => [
         'valutobounty' => [
-            'secret'          => password_hash(env('API_CLIENT_SECRET'), PASSWORD_BCRYPT),
+            'secret'          => password_hash(env('API_BOUNTY_CLIENT_SECRET'), PASSWORD_BCRYPT),
             'name'            => 'Valutobounty',
             'redirect_uri'    => 'http://foo/bar',
             'is_confidential' => true,
+            'allowed_grant_types' => [
+                'client_credentials',
+            ],
+        ],
+        'vlumarketsystem' => [
+            'secret'          => password_hash(env('API_VLUMARKET_SYSTEM_CLIENT_SECRET'), PASSWORD_BCRYPT),
+            'name'            => 'VLU Market system',
+            'redirect_uri'    => 'http://foo/bar',
+            'is_confidential' => true,
+            'allowed_grant_types' => [
+                'client_credentials',
+            ],
+        ],
+        'vlumarketusers' => [
+            'secret'          => password_hash(env('API_VLUMARKET_USERS_CLIENT_SECRET'), PASSWORD_BCRYPT),
+            'name'            => 'VLU Market users',
+            'redirect_uri'    => 'http://foo/bar',
+            'is_confidential' => true,
+            'allowed_grant_types' => [
+                'password',
+            ],
         ],
     ],
-    
 
     /**
      * Access token expire after this amount of time.
