@@ -37,7 +37,7 @@ return [
      * 
      * @var array
      */
-    'ip_whitelist' => explode(',', env('API_IP_WHITELIST')),
+    'ip_whitelist' => env('API_IP_WHITELIST') ? explode(',', env('API_IP_WHITELIST')) : [],
 
     /**
      * Only allow access from this list of origins.
