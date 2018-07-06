@@ -5,6 +5,7 @@ namespace Controllers\Api\V1\Auth;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\CryptKey;
 use Repositories\Authentication\AccessTokenRepository;
@@ -59,6 +60,9 @@ class AccessTokenController extends Controller
         // Enable the password grant on the server
         $this->enablePasswordGrant();
         
+        // Enable the refresh token grant on the server
+        $this->enableRefreshTokenGrant();
+        
         $response = new Response();
         $request  = ServerRequest::fromGlobals();
 
@@ -107,4 +111,21 @@ class AccessTokenController extends Controller
             new DateInterval('PT1H') // access tokens will expire after 1 hour
         );
     }
+    
+    /**
+     * Enable refresh token grant.
+     * 
+     * @return void
+     */
+    protected function enableRefreshTokenGrant()
+    {
+        // Enable the refresh token grant on the server
+        $grant = new RefreshTokenGrant(new RefreshTokenRepository());
+        $grant->setRefreshTokenTTL(new DateInterval('P1M')); // The refresh token will expire in 1 month
+        $this->server->enableGrantType(
+            $grant,
+            new DateInterval('PT1H') // The new access token will expire after 1 hour
+        );
+    }
+
 }

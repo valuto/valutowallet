@@ -77,6 +77,7 @@ return [
             'is_confidential' => true,
             'allowed_grant_types' => [
                 'password',
+                'refresh_token',
             ],
         ],
     ],
