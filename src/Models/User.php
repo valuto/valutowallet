@@ -267,7 +267,7 @@ class User {
 
                 $clientIp = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
 
-				$query = $this->mysqli->query("INSERT INTO users (`date`, `ip`, `username`, `password`, `supportpin`, `uses_old_account_identifier`) VALUES (\"" . date("n/j/Y g:i a") . "\", \"". $clientIp . "\", \"" . $username ."\", \"" . $password . "\", \"". rand(10000,99999) . "\", \"1\");");				
+				$query = $this->mysqli->query("INSERT INTO users (`date`, `ip`, `username`, `password`, `supportpin`, `uses_old_account_identifier`) VALUES (\"" . date("n/j/Y g:i a") . "\", \"". $clientIp . "\", \"" . $username ."\", \"" . $password . "\", \"". rand(10000,99999) . "\", \"0\");");				
 
 				if ($query)
 				{

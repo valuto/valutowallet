@@ -47,7 +47,7 @@ class UserCreateController extends Controller
             ?,
             ?,
             ?,
-            DATE_ADD(NOW(), INTERVAL 1 HOUR),
+            DATE_ADD(NOW(), INTERVAL 2 DAY),
             \"api\",
             ?
         );");
