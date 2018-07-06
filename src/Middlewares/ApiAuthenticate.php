@@ -21,8 +21,10 @@ class ApiAuthenticate
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
+        $whitelist = config('api', 'ip_whitelist');
+
         // IP whitelist.
-        if (!in_array($_SERVER['REMOTE_ADDR'], config('api', 'ip_whitelist'))) {
+        if ( ! empty($whitelist) && ! in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
             throw new \Exception('Host not allowed.');
         }
 
