@@ -100,12 +100,13 @@ class UserCreateController extends Controller
 
         if ($result) {
             return json_encode([
-                'success' => true,
+                'status' => 'success',
                 'user_id' => $mysqli->insert_id,
                 'setPasswordToken' => $setPasswordToken,
             ]);
         } else {
             return json_encode([
+                'status'  => 'error',
                 'error'   => 'user_creation_failed',
                 'message' => $mysqli->error,
             ]);
