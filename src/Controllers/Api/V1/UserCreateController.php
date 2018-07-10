@@ -31,6 +31,13 @@ class UserCreateController extends Controller
             `uses_old_account_identifier`,
             `first_name`,
             `last_name`,
+            `address_1`,
+            `address_2`,
+            `zip_code`,
+            `city`,
+            `country_code`,
+            `state`,
+            `tier_level`,
             `set_password_token`,
             `set_password_before`,
             `origin`,
@@ -47,6 +54,13 @@ class UserCreateController extends Controller
             ?,
             ?,
             ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            '0',
+            ?,
             DATE_ADD(NOW(), INTERVAL 2 DAY),
             \"api\",
             ?
@@ -59,7 +73,28 @@ class UserCreateController extends Controller
         $setPasswordToken = base64_encode(random_bytes(30));
         $bounty           = isset($params['bounty']) ? (int)$params['bounty'] : 0;
 
-        $stmt->bind_param('ssssssi', $params['client_ip'], $particulars['email'], $particulars['username'], $particulars['first_name'], $particulars['last_name'], $setPasswordToken, $bounty);
+        $address1 = isset($particulars['address_1']) ? $particulars['address_1'] : null;
+        $address2 = isset($particulars['address_2']) ? $particulars['address_2'] : null;
+        $zipcode  = isset($particulars['zip_code']) ? $particulars['zip_code'] : null;
+        $city     = isset($particulars['city']) ? $particulars['city'] : null;
+        $country  = isset($particulars['country_code']) ? $particulars['country_code'] : null;
+        $state    = isset($particulars['state']) ? $particulars['state'] : null;
+
+        $stmt->bind_param('ssssssssssssi', 
+            $params['client_ip'], 
+            $particulars['email'], 
+            $particulars['username'], 
+            $particulars['first_name'], 
+            $particulars['last_name'], 
+            $address1,
+            $address2,
+            $zipcode,
+            $city,
+            $country,
+            $state,
+            $setPasswordToken, 
+            $bounty
+        );
         $result = $stmt->execute();
         $stmt->close();
 
