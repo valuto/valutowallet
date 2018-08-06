@@ -3,10 +3,9 @@
 namespace Tests\Browser\Controllers;
 
 use Tests\DuskTestCase;
-use Models\User;
 
 /**
- * UserProfileController test class.
+ * HomeController test class.
  * 
  * @author Valuto <tech@valuto.io>
  */
@@ -14,14 +13,15 @@ class HomeControllerTest extends DuskTestCase
 {
 
     /**
-     * A basic browser test example.
+     * Test frontpage elements.
      *
      * @return void
      */
-    public function testLoginBox()
+    public function testElements()
     {
-        $this->browser->visit('');
-
-        $this->assertTrue($this->browser->element("#loginSection > h1")->getText() === 'Log In');
+        $this->browser
+             ->visit('')
+             ->assertSee('Log In')
+             ->assertSee('Create Free Account');
     }
 }

@@ -49,7 +49,7 @@ if ($admin)
             <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
             <input type="text" class="form-control" name="address" id="address" placeholder="<?php echo lang('WALLET_ADDRESS'); ?>">
             <input type="text" class="form-control" name="amount" id="amount" placeholder="<?php echo lang('WALLET_AMOUNT_VLU'); ?>">
-            <button type="submit" class="btn btn-default" style="margin-top: 10px;"><?php echo lang('WALLET_SENDCONF'); ?></button>
+            <button type="submit" class="btn btn-default" id="withdrawBtn" style="margin-top: 10px;"><?php echo lang('WALLET_SENDCONF'); ?></button>
         </form>
         <p id="withdrawmsg"></p>
       </div>
