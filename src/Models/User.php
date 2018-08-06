@@ -61,6 +61,69 @@ class User {
 
     }
 
+    public function getUserById($id)
+    {
+        if (empty($id)) {
+            throw new Exception('No user ID supplied.');
+        }
+
+        $stmt = $this->mysqli->prepare('SELECT * FROM users WHERE id=?');
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return $result->fetch_assoc();
+
+    }
+
+    public function updateUserProfile($id, $data)
+    {
+        $stmt = $this->mysqli->prepare("
+            UPDATE 
+                users
+            SET
+                first_name = ?,
+                last_name = ?,
+                address_1 = ?,
+                address_2 = ?,
+                zip_code = ?,
+                city = ?,
+                state = ?,
+                country_code = ?,
+                email = ?
+            WHERE
+                id = ?");
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param(
+            'sssssssssi',
+            $data['first_name'],
+            $data['last_name'],
+            $data['address_1'],
+            $data['address_2'],
+            $data['zip_code'],
+            $data['city'],
+            $data['state'],
+            $data['country'],
+            $data['email'],
+            $id
+        );
+
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
     public function getUserByEmail($email)
     {
         $stmt = $this->mysqli->prepare('SELECT * FROM users WHERE email=?');

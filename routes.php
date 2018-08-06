@@ -27,6 +27,8 @@ $route->post('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@sto
 $route->put('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@update')->middleware('auth');
 $route->delete('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@destroy')->middleware('auth');
 
+$route->put('user/profile', 'Controllers\UserProfileController@update')->middleware('auth');
+
 $route->post('wallet/newaddress', 'Controllers\WalletController@newaddress')->middleware('auth');
 $route->post('wallet/withdraw', 'Controllers\WalletController@withdraw')->middleware('auth');
 

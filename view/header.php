@@ -22,7 +22,7 @@
         <script src="/assets/js/layout.js?v=4"></script>
         <!-- End Bootstrap include stuff-->
         <title><?=config('app', 'fullname')?>wallet</title>
-		<link rel="icon" href="/favicon.ico">
+		<link rel="icon" href="/assets/img/favicon.ico.png">
         <script src='https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit'></script>
     </head>
     
@@ -115,7 +115,7 @@
 								<li>
 									<form id="logoutForm" action="/auth/logout" method="post">
 									</form>
-									<a href="#" onclick="document.getElementById('logoutForm').submit();" title="<?php echo lang('MASTER_MENU_LOGOUT'); ?>"><?php echo lang('MASTER_MENU_LOGOUT'); ?></a>
+									<a href="#" onclick="document.getElementById('logoutForm').submit();" title="<?php echo lang('MASTER_MENU_LOGOUT'); ?>" id="logoutBtn"><?php echo lang('MASTER_MENU_LOGOUT'); ?></a>
 								</li>
 							<?php else: ?>
 								<li class="active"><a href="/#loginSection" title="<?php echo lang('MASTER_MENU_LOGIN'); ?>"><?php echo lang('MASTER_MENU_LOGIN'); ?></a></li>

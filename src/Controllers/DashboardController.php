@@ -29,6 +29,8 @@ class DashboardController extends Controller
 
         $user = (new User($mysqli))->getUserByUsername($_SESSION['user_session']);
 
+        $selectedCountryCode = $user['country_code'];
+
         (new \Services\Bounty\Signup\User())->showBountyPending($user);
 
         if ( ! $twofactorenabled && ! Flash::has('showNotice')) {

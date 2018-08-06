@@ -190,4 +190,19 @@ You are as a user of valutowallet.com responsible for the security of your funds
     'FORM_ACTIVATION_HEADLINE' => 'Choose password',
     'FORM_ACTIVATE' => 'Activate',
 
+    // User profile
+    'WALLET_PARTICULARS' => 'Profil',
+    'WALLET_PARTICULARS_FIRST_NAME' => 'Fornavn',
+    'WALLET_PARTICULARS_LAST_NAME' => 'Efternavn',
+    'WALLET_PARTICULARS_ADDRESS_1' => 'Adresse',
+    'WALLET_PARTICULARS_ADDRESS_2' => 'Adresse (2. linje)',
+    'WALLET_PARTICULARS_ZIP_CODE' => 'Postnummer',
+    'WALLET_PARTICULARS_CITY' => 'By',
+    'WALLET_PARTICULARS_STATE' => 'Stat/område',
+    'WALLET_PARTICULARS_COUNTRY' => 'Land',
+    'WALLET_PARTICULARS_EMAIL' => 'E-mail',
+    'WALLET_PARTICULARS_UPDATE_PROFILE' => 'Opdater',
+    'WALLET_PARTICULARS_UPDATE_SUCCESSFUL' => 'Din profil blev opdateret.',
+    'WALLET_PARTICULARS_UPDATE_ERROR' => 'Der opstod en fejl, venligst prøv igen eller kontakt info@valuto.io.',
+
 ];

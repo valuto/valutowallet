@@ -8,7 +8,7 @@ require __DIR__ . '/../vendor/autoload.php';
 /**
  * Load .env file.
  */
-$dotenv = new Dotenv\Dotenv(__DIR__ . '/../');
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../', env('ENVIRONMENT') === 'testing' ? '.env.testing' : '.env');
 $dotenv->load();
 
 /**

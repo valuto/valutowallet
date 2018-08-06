@@ -174,3 +174,20 @@ if (!function_exists('json')) {
     }
 
 }
+
+if (!function_exists('preselectOption')) {
+
+    /**
+     * Preselect option in <select>
+     *
+     * @param string $optionValue
+     * @param string $selected
+     * @return void
+     */
+    function preselectOption($optionValue, $selected)
+    {
+        if ($optionValue === $selected) {
+            return ' selected="selected"';
+        }
+    }
+}

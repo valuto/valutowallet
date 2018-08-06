@@ -190,4 +190,19 @@ You are as a user of valutowallet.com responsible for the security of your funds
     'FORM_ACTIVATION_HEADLINE' => 'Choose password',
     'FORM_ACTIVATE' => 'Activate',
 
+    // User profile
+    'WALLET_PARTICULARS' => 'Profile',
+    'WALLET_PARTICULARS_FIRST_NAME' => 'First name',
+    'WALLET_PARTICULARS_LAST_NAME' => 'Last name',
+    'WALLET_PARTICULARS_ADDRESS_1' => 'Address',
+    'WALLET_PARTICULARS_ADDRESS_2' => 'Address (second line)',
+    'WALLET_PARTICULARS_ZIP_CODE' => 'Zip code',
+    'WALLET_PARTICULARS_CITY' => 'City',
+    'WALLET_PARTICULARS_STATE' => 'State',
+    'WALLET_PARTICULARS_COUNTRY' => 'Country',
+    'WALLET_PARTICULARS_EMAIL' => 'E-mail',
+    'WALLET_PARTICULARS_UPDATE_PROFILE' => 'Update',
+    'WALLET_PARTICULARS_UPDATE_SUCCESSFUL' => 'Your profile was updated successfully.',
+    'WALLET_PARTICULARS_UPDATE_ERROR' => 'An error occurred, please try again or contact info@valuto.io.',
+
 ];

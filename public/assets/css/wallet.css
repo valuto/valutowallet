@@ -67,7 +67,8 @@ main section form button.btn-signup {
 }
 
 main section#walletTransactions,
-main section#walletPassword {
+main section#walletPassword,
+main section#walletParticulars {
     margin-top: 50px !important;
 }
 

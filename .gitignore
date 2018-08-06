@@ -1,3 +1,4 @@
 qrgen/phpqrcode/cache
 /vendor
 .env
+.env.testing

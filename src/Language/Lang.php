@@ -19,7 +19,7 @@ class Lang
     {
         $translations = self::loadTranslations();
 
-        return $translations[$key];
+        return isset($translations[$key]) ? $translations[$key] : $key;
     }
 
     /**
