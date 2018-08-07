@@ -37,7 +37,7 @@ class UserProfileController extends Controller
         $params = $_POST;
 
         // Invalid e-mail.
-        if (! empty($params['email']) && ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (! empty($params['email']) && ! filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
             return json_encode([
                 'status' => 'error',
                 'message' => lang('WALLET_PARTICULARS_UPDATE_ERROR'),
