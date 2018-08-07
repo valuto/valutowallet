@@ -6,10 +6,11 @@ Uses RPC to connect to valutod core on port 40332.
 
 # Setup
 
-1. Copy `.env.example` to `.env` and `.env.testing.example` to `.env.testing`.
+1. Copy `.env.example` to `.env` and `.env.testing.example` to `.env.testing`. 
+Edit the files to match your own server configuration.
 2. `composer install`
 3. Run the database migrations from the `migrations/` folder.
-4. Make sure the `qrgen/phpqrcode/cache` folder exists and is writable by the webserver.
+4. Make sure the `qrgen/phpqrcode/cache/` folder exists and is writable by the webserver.
 
 # Testing
 
