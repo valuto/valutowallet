@@ -216,7 +216,7 @@ if ($admin)
   <h1><?php echo lang('WALLET_PARTICULARS'); ?></h1>
   <div class="row">
     <div class="col-md-4">
-      <?php echo include __DIR__ . '/parts/particulars_form.php'; ?>
+      <?php include __DIR__ . '/parts/particulars_form.php'; ?>
     </div>
     <div class="col-md-4">
       <p id="particularsmsg"></p>
