@@ -31,7 +31,7 @@
     <div class="form-group">
         <label for="country"><?php echo lang('WALLET_PARTICULARS_COUNTRY'); ?></label>
         <select class="form-control" name="country" id="country">
-        <?php echo include __DIR__ . '/parts/country_options_list.php'; ?>
+        <?php echo include __DIR__ . '/country_options_list.php'; ?>
     </select>
     </div>
     <div class="form-group">
