@@ -6,6 +6,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Controllers\Controller;
 use Models\User;
 use Models\Flash;
+use Services\Tiers\TierLevel;
+use Repositories\Database\UserRepository;
 
 class UserProfileController extends Controller
 {
@@ -16,6 +18,11 @@ class UserProfileController extends Controller
     protected $user;
 
     /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -23,6 +30,7 @@ class UserProfileController extends Controller
         global $mysqli;
 
         $this->user = new User($mysqli);
+        $this->userRepository = new UserRepository();
 
         parent::__construct();
     }
@@ -34,6 +42,7 @@ class UserProfileController extends Controller
      */
     public function update(ServerRequestInterface $request)
     {
+        $userId = $_SESSION['user_id'];
         $params = $_POST;
 
         // Invalid e-mail.
@@ -44,7 +53,7 @@ class UserProfileController extends Controller
             ]);
         }
 
-        $user = $this->user->getUserById($_SESSION['user_session']);
+        $user = $this->user->getUserById($userId);
 
         $particulars = [
             'first_name' => $params['first_name'],
@@ -56,9 +65,23 @@ class UserProfileController extends Controller
             'state' => $params['state'],
             'country' => $params['country'],
             'email' => $params['email'],
+            'phone_number' => $params['phone_number'],
         ];
 
-        $result = $this->user->updateUserProfile($_SESSION['user_id'], $particulars);
+        $result = $this->userRepository->updateProfile($userId, $particulars);
+
+        if ($user['email'] !== $params['email']) {
+            $this->userRepository->resetEmailConfirmation($userId);
+        }
+
+        if ($user['phone_number'] !== $params['phone_number']) {
+            $this->userRepository->resetPhoneNumberConfirmation($userId);
+        }
+
+        // Refetch after update.
+        $user = $this->user->getUserById($userId);
+
+        $this->userRepository->updateTier($userId, TierLevel::determine($user));
 
         if ($result) {
 

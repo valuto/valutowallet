@@ -45,6 +45,11 @@ $route->get('', 'Controllers\HomeController@index');
 $route->get('index.php', 'Controllers\HomeController@redirect');
 
 /**
+ * Know Your Customer
+ */
+$route->get('kyc', 'Controllers\KycController@show');
+
+/**
  * API version 1.
  */
 $route->post('api/v1/access-token', 'Controllers\Api\V1\Auth\AccessTokenController@store');

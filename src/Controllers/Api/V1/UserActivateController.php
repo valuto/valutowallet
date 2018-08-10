@@ -7,9 +7,12 @@ use Controllers\Controller;
 use Models\User;
 use Services\ValutoDaemon\Client;
 use Services\Bounty\Signup\User as UserBounty;
+use Traits\RenderMessageTrait;
 
 class UserActivateController extends Controller
 {
+    use RenderMessageTrait;
+    
     /**
      * The database instance.
      * 
@@ -97,18 +100,5 @@ class UserActivateController extends Controller
         $this->bountyService->prepareForBountyPayout($user);
 
         return redirect('');
-    }
-
-    /**
-     * Render a message view.
-     * 
-     * @param  string $message
-     * @return void
-     */
-    protected function renderMessageView($message)
-    {
-        include __DIR__ . "/../../../../view/header.php";
-        include __DIR__ . "/../../../../view/api/v1/user/message.php";
-        include __DIR__ . "/../../../../view/footer.php";
     }
 }

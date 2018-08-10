@@ -201,8 +201,13 @@ You are as a user of valutowallet.com responsible for the security of your funds
     'WALLET_PARTICULARS_STATE' => 'Stat/område',
     'WALLET_PARTICULARS_COUNTRY' => 'Land',
     'WALLET_PARTICULARS_EMAIL' => 'E-mail',
+    'WALLET_PARTICULARS_PHONE_NUMBER' => 'Phone number',
     'WALLET_PARTICULARS_UPDATE_PROFILE' => 'Opdater',
     'WALLET_PARTICULARS_UPDATE_SUCCESSFUL' => 'Din profil blev opdateret.',
     'WALLET_PARTICULARS_UPDATE_ERROR' => 'Der opstod en fejl, venligst prøv igen eller kontakt info@valuto.io.',
 
+    // Know your customer
+    'FORM_KYC_HEADLINE' => 'Oplysninger om dig',
+    'FORM_KYC_EXPLANATION' => 'Vi er underlagt <b>Know Your Customer</b>-regulativet, og er derfor nødt til at indhente flere oplysninger om dig for at sikre, at du - uden at vide det - involveres i for eksempel hvidvask eller anden form for økonomisk kriminalitet.',
+    'FORM_KYC_SKIP' => 'Ikke nu',
 ];

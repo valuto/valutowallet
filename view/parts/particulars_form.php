@@ -38,5 +38,9 @@
         <label for="email"><?php echo lang('WALLET_PARTICULARS_EMAIL'); ?></label>
         <input type="email" class="form-control" name="email" id="email" value="<?php echo $user['email']; ?>" placeholder="<?php echo lang('WALLET_PARTICULARS_EMAIL'); ?>">
     </div>
+    <div class="form-group">
+        <label for="phone_number"><?php echo lang('WALLET_PARTICULARS_PHONE_NUMBER'); ?></label>
+        <input type="phone_number" class="form-control" name="phone_number" id="phone_number" value="<?php echo $user['phone_number']; ?>" placeholder="<?php echo lang('WALLET_PARTICULARS_PHONE_NUMBER'); ?>">
+    </div>
     <button type="submit" class="btn btn-default btn-updateprofile"><?php echo lang('WALLET_PARTICULARS_UPDATE_PROFILE'); ?></button>
 </form>

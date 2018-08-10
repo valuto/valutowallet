@@ -1,0 +1,1 @@
+C:30:"PHPUnit\Runner\TestResultCache":322:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:8:{s:9:"testLogin";d:2.482;s:10:"testLogout";d:2.484;s:12:"testRegister";d:4.312;s:12:"testElements";d:0.517;s:26:"testProfileFieldsExistence";d:2.38;s:23:"testProfileFieldsUpdate";d:3.001;s:27:"testProfileFieldsUpdateFail";d:4.724;s:33:"testWithdrawInsufficientFundsFail";d:3.758;}}}
