@@ -47,7 +47,9 @@ $route->get('index.php', 'Controllers\HomeController@redirect');
 /**
  * Know Your Customer
  */
-$route->get('kyc', 'Controllers\KycController@show');
+$route->get('kyc/status', 'Controllers\Kyc\StatusController@show');
+$route->post('kyc/skip', 'Controllers\Kyc\SkipController@store');
+$route->get('kyc', 'Controllers\Kyc\FormController@show');
 
 /**
  * API version 1.

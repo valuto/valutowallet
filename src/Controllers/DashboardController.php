@@ -15,7 +15,7 @@ class DashboardController extends Controller
 
         $user = (new User($mysqli))->getUserByUsername($_SESSION['user_session']);
 
-        if (KycCheck::showReminder($user)) {
+        if ( ! KycCheck::isVerified($user) && ! KycCheck::reminderSkipped()) {
             redirect('/kyc');
         }
 

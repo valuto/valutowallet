@@ -30,7 +30,7 @@ class UserProfileController extends Controller
         global $mysqli;
 
         $this->user = new User($mysqli);
-        $this->userRepository = new UserRepository();
+        $this->userRepository = new UserRepository($mysqli);
 
         parent::__construct();
     }

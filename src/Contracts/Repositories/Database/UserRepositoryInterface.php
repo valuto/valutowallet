@@ -40,5 +40,13 @@ interface UserRepositoryInterface
      * @return boolean
      */
     public function resetPhoneNumberConfirmation($id);
+    
+    /**
+     * Skip KYC reminder.
+     * 
+     * @param int $id  the user id.
+     * @return boolean
+     */
+    public function skipKycReminder($id);
 
 }

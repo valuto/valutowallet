@@ -26,15 +26,33 @@ class KycCheck
     }
 
     /**
-     * Determine if the user should receive a reminder
-     * about missing KYC information.
+     * Determine if the user is KYC verified (information filled out).
      * 
      * @param array $user  the user.
      * @return boolean.
      */
-    public static function showReminder($user)
+    public static function isVerified($user)
     {
-        return $user['tier_level'] < 1;
+        return $user['tier_level'] >= 1;
+    }
+
+    /**
+     * User skipped the reminder.
+     * 
+     * @return boolean.
+     */
+    public static function reminderSkipped()
+    {
+        if ( ! isset($_SESSION['kyc_reminder_skipped'])) {
+            return false;
+        }
+
+        // User skipped reminder within the last 12 hours.
+        if ($_SESSION['kyc_reminder_skipped'] < (time() - 43200)) {
+            return false;
+        }
+
+        return true;
     }
 
 }

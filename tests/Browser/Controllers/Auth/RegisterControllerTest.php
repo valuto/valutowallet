@@ -29,7 +29,7 @@ class RegisterControllerTest extends DuskTestCase
             ->type('#signupPassword', $password)
             ->type('#signupPasswordConf', $password)
             ->press('Sign Up')
-            ->assertPathIs('/')
+            ->assertPathIs('/kyc')
 
             // Disclaimer.
             ->assertVisible('.disclaimer-popup')
@@ -47,7 +47,20 @@ class RegisterControllerTest extends DuskTestCase
             ->click('.disclaimer-popup .step6 .footer button')
             ->waitUntilMissing('.disclaimer-popup')
 
+            // Fill out KYC form.
+            ->assertSee('Information about you')
+            ->type('#first_name', 'First name')
+            ->type('#last_name', 'Last name')
+            ->type('#address_1', 'Address 1')
+            ->type('#zip_code', '4200')
+            ->type('#city', 'Slagelse')
+            ->select('#country', 'DK')
+            ->type('#email', 'test@valuto.io')
+            ->type('#phone_number', '88888888')
+            ->click('.btn-updateprofile')
+
             // User is now seeing account-tab.
+            ->waitFor('#walletOverview')
             ->assertSee('Two-factor authentication is an extra layer of security for your wallet account')
             ->assertSee('Your Wallet')
             ->assertSee('Last 10 transactions');

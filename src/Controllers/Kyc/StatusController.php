@@ -1,15 +1,13 @@
 <?php
 
-namespace Controllers;
+namespace Controllers\Kyc;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Models\User;
-use Traits\RenderMessage;
+use Services\Tiers\KycCheck;
+use Controllers\Controller;
 
-class KycController extends Controller
+class StatusController extends Controller
 {
-    use RenderMessage;
-
     /**
      * The database instance.
      * 
@@ -30,7 +28,7 @@ class KycController extends Controller
     }
 
     /**
-     * Show KYC form for user.
+     * Show KYC status for user.
      * 
      * @return 
      */
@@ -38,10 +36,6 @@ class KycController extends Controller
     {
         $user = (new User($this->mysqli))->getUserById($_SESSION['user_id']);
 
-        $selectedCountryCode = $user['country_code'];
-
-        include __DIR__ . "/../../view/header.php";
-        include __DIR__ . "/../../view/kyc.php";
-        include __DIR__ . "/../../view/footer.php";
+        return json('verified', (int) KycCheck::isVerified($user));
     }
 }

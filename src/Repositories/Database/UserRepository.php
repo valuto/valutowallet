@@ -10,11 +10,11 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Instantiate repository with dependencies.
      * 
+     * @param MySQLi $mysqli
      * @return void
      */
-    public function __construct()
+    public function __construct($mysqli)
     {
-        global $mysqli;
         $this->mysqli = $mysqli;
     }
 
@@ -152,6 +152,37 @@ class UserRepository implements UserRepositoryInterface
                 users
             SET
                 phone_number_confirmed_at = NULL
+            WHERE
+                id = ?");
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param(
+            'i',
+            $id
+        );
+
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+    
+    /**
+     * Skip KYC reminder.
+     * 
+     * @param int $id  the user id.
+     * @return boolean
+     */
+    public function skipKycReminder($id)
+    {
+        $stmt = $this->mysqli->prepare("
+            UPDATE 
+                users
+            SET
+                kyc_skipped = kyc_skipped+1
             WHERE
                 id = ?");
 
