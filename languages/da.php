@@ -209,5 +209,6 @@ You are as a user of valutowallet.com responsible for the security of your funds
     // Know your customer
     'FORM_KYC_HEADLINE' => 'Oplysninger om dig',
     'FORM_KYC_EXPLANATION' => 'Vi er underlagt <b>Know Your Customer</b>-regulativet, og er derfor nødt til at indhente flere oplysninger om dig for at sikre, at du - uden at vide det - involveres i for eksempel hvidvask eller anden form for økonomisk kriminalitet.',
+    'FORM_KYC_USER_BLOCKED' => 'Du skal udfylde nedenstående formular, inden du kan fortsætte.',
     'FORM_KYC_SKIP' => 'Ikke nu',
 ];

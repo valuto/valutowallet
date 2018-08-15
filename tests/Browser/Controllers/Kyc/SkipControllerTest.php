@@ -66,12 +66,22 @@ class SkipControllerTest extends DuskTestCase
              ->type('#loginPassword', $password)
              ->press('Log In')
              
-             // See KYC third time. Assert skip button is no longer available.
+             // See KYC third time.
+             ->assertSee('Information about you')
+             ->assertVisible('.skip-kyc-btn')
+             ->click('.skip-kyc-btn')
+             ->waitFor('#walletOverview')
+             ->click('#logoutBtn')
+             
+             // Relogin
+             ->waitForText('Create Free Account')
+             ->type('#loginUsername', $username)
+             ->type('#loginPassword', $password)
+             ->press('Log In')
+             
+             // See KYC fourth time. Assert skip button is no longer available.
              ->assertSee('Information about you')
              ->assertSee(lang('FORM_KYC_USER_BLOCKED'))
              ->assertMissing('.skip-kyc-btn');
-             
-
-
     }
 }
