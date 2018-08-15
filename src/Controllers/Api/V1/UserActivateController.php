@@ -7,11 +7,11 @@ use Controllers\Controller;
 use Models\User;
 use Services\ValutoDaemon\Client;
 use Services\Bounty\Signup\User as UserBounty;
-use Traits\RenderMessageTrait;
+use Traits\RenderMessage;
 
 class UserActivateController extends Controller
 {
-    use RenderMessageTrait;
+    use RenderMessage;
     
     /**
      * The database instance.

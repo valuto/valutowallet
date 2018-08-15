@@ -211,4 +211,7 @@ You are as a user of valutowallet.com responsible for the security of your funds
     'FORM_KYC_EXPLANATION' => 'We are subject to the <b>Know Your Customer</b>-regulation, and therefore need to obtain more information about you to ensure that you - without knowing it - are involved in, for example, money laundering or other forms of financial crime.',
     'FORM_KYC_USER_BLOCKED' => 'You will have to fill out the form below before you can continue.',
     'FORM_KYC_SKIP' => 'Not now',
+
+    // Country IP filter
+    'COUNTRY_BLOCKED' => 'Your country is not supported by Valutowallet at the moment. Please check back later or contact info@valuto.io, if you have any questions.',
 ];
