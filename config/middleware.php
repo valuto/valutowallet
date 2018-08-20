@@ -12,5 +12,6 @@ return [
     'apiauth'   => \Middlewares\ApiAuthenticate::class,
     'apicors'   => \Middlewares\ApiCors::class,
     'csrf'      => \Middlewares\CsrfToken::class,
+    'countryAllowed' => \Middlewares\CountryAllowed::class,
 
 ];

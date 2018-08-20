@@ -61,4 +61,11 @@ return [
      * Prefix Valuto account names in wallet.
      */
     'prefix_account_name' => env('PREFIX_ACCOUNT_NAME', ''),
+
+    /**
+     * List of blocked countries.
+     */
+    'blocked_countries' => [
+        'US',
+    ],
 ];

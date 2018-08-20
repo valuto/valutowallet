@@ -36,13 +36,14 @@ $route->get('qrcode', 'Controllers\QrcodeController@show')->middleware('auth');
 
 $route->post('auth/login', 'Controllers\Auth\LoginController@store')->middleware('recaptcha');
 $route->post('auth/logout', 'Controllers\Auth\LoginController@destroy');
-$route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware('recaptcha');
+$route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware(['recaptcha', 'countryAllowed']);
 
 /**
  * Frontpage.
  */
 $route->get('', 'Controllers\HomeController@index');
 $route->get('index.php', 'Controllers\HomeController@redirect');
+$route->get('/country-blocked', 'Controllers\Auth\CountryBlockedController@show');
 
 /**
  * Know Your Customer
