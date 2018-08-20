@@ -201,7 +201,7 @@ You are as a user of valutowallet.com responsible for the security of your funds
     'WALLET_PARTICULARS_STATE' => 'Stat/område',
     'WALLET_PARTICULARS_COUNTRY' => 'Land',
     'WALLET_PARTICULARS_EMAIL' => 'E-mail',
-    'WALLET_PARTICULARS_PHONE_NUMBER' => 'Phone number',
+    'WALLET_PARTICULARS_PHONE_NUMBER' => 'Telefonnummer',
     'WALLET_PARTICULARS_UPDATE_PROFILE' => 'Opdater',
     'WALLET_PARTICULARS_UPDATE_SUCCESSFUL' => 'Din profil blev opdateret.',
     'WALLET_PARTICULARS_UPDATE_ERROR' => 'Der opstod en fejl, venligst prøv igen eller kontakt info@valuto.io.',
