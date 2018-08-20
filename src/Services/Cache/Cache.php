@@ -2,6 +2,8 @@
 
 namespace Services\Cache;
 
+use Predis\Client as Redis;
+
 class Cache
 {
     private static $handler = NULL;
@@ -21,11 +23,7 @@ class Cache
     
         switch (config('cache', 'driver')) {
             case 'redis':
-                self::$handler = new Predis\Client([
-                    'scheme' => 'tcp',
-                    'host'   => config('cache', 'host'),
-                    'port'   => config('cache', 'port'),
-                ]);
+                self::$handler = new Redis(config('cache', 'host'));
                 break;
         }
 
