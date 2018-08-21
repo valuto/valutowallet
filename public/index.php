@@ -1,8 +1,5 @@
 <?php
 
-session_start();
-header('Cache-control: private'); // IE 6 FIX
-
 require __DIR__ . '/../vendor/autoload.php';
 
 /**

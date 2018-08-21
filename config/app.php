@@ -68,4 +68,14 @@ return [
     'blocked_countries' => [
         'US',
     ],
+
+    /**
+     * Session save handler.
+     */
+    'session_save_handler' => env('SESSION_SAVE_HANDLER', ''),
+
+    /**
+     * Session save path.
+     */
+    'session_save_path' => env('SESSION_SAVE_PATH', ''),
 ];
