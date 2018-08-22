@@ -49,7 +49,7 @@ if ($admin)
             <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
             <input type="text" class="form-control" name="address" id="address" placeholder="<?php echo lang('WALLET_ADDRESS'); ?>">
             <input type="text" class="form-control" name="amount" id="amount" placeholder="<?php echo lang('WALLET_AMOUNT_VLU'); ?>">
-            <button type="submit" class="btn btn-default" style="margin-top: 10px;"><?php echo lang('WALLET_SENDCONF'); ?></button>
+            <button type="submit" class="btn btn-default" id="withdrawBtn" style="margin-top: 10px;"><?php echo lang('WALLET_SENDCONF'); ?></button>
         </form>
         <p id="withdrawmsg"></p>
       </div>
@@ -184,38 +184,58 @@ if ($admin)
     </div>
   </section>
 
-  <section class="col-md-12" id="walletPassword" v-show="showtab === 'account'">
-    <h1><?php echo lang('WALLET_PASSUPDATE'); ?></h1>
-    <div class="row">
-      <div class="col-md-4">
-        <form action="/auth/password" method="POST" class="clearfix" id="pwdform">
-            <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-            <div class="form-group">
-                <label for="oldpassword"><?php echo lang('WALLET_PASSUPDATEOLD'); ?></label>
-                <input type="password" class="form-control" name="oldpassword" id="oldpassword" placeholder="<?php echo lang('WALLET_PASSUPDATEOLD'); ?>">
-            </div>
-            <div class="form-group">
-                <label for="newpassword"><?php echo lang('WALLET_PASSUPDATENEW'); ?></label>
-                <input type="password" class="form-control" name="newpassword" id="newpassword" placeholder="<?php echo lang('WALLET_PASSUPDATENEW'); ?>">
-            </div>
-            <div class="form-group">
-                <label for="confirmpassword"><?php echo lang('WALLET_PASSUPDATENEWCONF'); ?></label>
-                <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" placeholder="<?php echo lang('WALLET_PASSUPDATENEWCONF'); ?>">
-            </div>
-            <button type="submit" class="btn btn-default btn-updatepw"><?php echo lang('WALLET_PASSUPDATECONF'); ?></button>
-        </form>
-      </div>
-      <div class="col-md-4">
-        <p id="pwdmsg"></p>
-        <p style="font-size:1em;"><?php echo lang('WALLET_SUPPORTNOTE'); ?></p>
-      </div>
+<section class="col-md-12" id="walletPassword" v-show="showtab === 'account'">
+  <h1><?php echo lang('WALLET_PASSUPDATE'); ?></h1>
+  <div class="row">
+    <div class="col-md-4">
+      <form action="/auth/password" method="POST" class="clearfix" id="pwdform">
+          <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+          <div class="form-group">
+              <label for="oldpassword"><?php echo lang('WALLET_PASSUPDATEOLD'); ?></label>
+              <input type="password" class="form-control" name="oldpassword" id="oldpassword" placeholder="<?php echo lang('WALLET_PASSUPDATEOLD'); ?>">
+          </div>
+          <div class="form-group">
+              <label for="newpassword"><?php echo lang('WALLET_PASSUPDATENEW'); ?></label>
+              <input type="password" class="form-control" name="newpassword" id="newpassword" placeholder="<?php echo lang('WALLET_PASSUPDATENEW'); ?>">
+          </div>
+          <div class="form-group">
+              <label for="confirmpassword"><?php echo lang('WALLET_PASSUPDATENEWCONF'); ?></label>
+              <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" placeholder="<?php echo lang('WALLET_PASSUPDATENEWCONF'); ?>">
+          </div>
+          <button type="submit" class="btn btn-default btn-updatepw"><?php echo lang('WALLET_PASSUPDATECONF'); ?></button>
+      </form>
     </div>
-  </section>
+    <div class="col-md-4">
+      <p id="pwdmsg"></p>
+      <p style="font-size:1em;"><?php echo lang('WALLET_SUPPORTNOTE'); ?></p>
+    </div>
+  </div>
+</section> 
+
+<section class="col-md-12" id="walletParticulars" v-show="showtab === 'account'">
+  <h1><?php echo lang('WALLET_PARTICULARS'); ?></h1>
+  <div class="row">
+    <div class="col-md-4">
+      <?php include __DIR__ . '/parts/particulars_form.php'; ?>
+    </div>
+    <div class="col-md-4">
+      <p id="particularsmsg"></p>
+      <p style="font-size:1em;"><?php echo lang(''); ?></p>
+    </div>
+  </div>
+</section>
 
 </div>
 
 <script type="text/javascript">
+
 var blockchain_url = "<?=config('app', 'blockchain_url')?>";
+
+var emailValid = function(email) {
+    var emailRegex = /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/;
+    return emailRegex.test(email);
+}
+
 $(document).on('click', '#donate', function (e){
   $("#donateinfo").show();
   $("#withdrawinfo").hide();
@@ -324,7 +344,7 @@ $(document).on('submit', '#pwdform', function(e)
         },
         error: function(jqXHR, textStatus, errorThrown) 
         {
-            //ugh, gtfo    
+            alert('Something went wrong. Please try again or contact info@valuto.io.');
         }
     });
     e.preventDefault();
@@ -427,6 +447,49 @@ $(document).on('submit', '#verifytwofactorform', function(e)
     });
 
     e.preventDefault();
+});
+
+$(document).on('submit', '#particularsform', function(e) {
+
+    var postData = $(this).serializeArray();
+    var formURL = $(this).attr('action');
+    
+    $.ajax({
+        url : formURL,
+        type: 'PUT',
+        data : postData,
+        success:function(data, textStatus, jqXHR) 
+        {
+            var json = $.parseJSON(data);
+
+            if (typeof json.status !== 'undefined' && json.status === 'success') {
+               $("#particularsmsg").text(json.message);
+               $("#particularsmsg").css("color", "green");
+               $("#particularsmsg").show();
+               $([document.documentElement, document.body]).animate({
+                scrollTop: $("#walletParticulars").offset().top
+               }, 500);
+            } else {
+               $("#particularsmsg").text(json.message);
+               $("#particularsmsg").css("color", "red");
+               $("#particularsmsg").show();
+               $([document.documentElement, document.body]).animate({
+                scrollTop: $("#walletParticulars").offset().top
+               }, 500);
+            }
+
+            if (json.newtoken) {
+                $('input[name="token"]').val(json.newtoken);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) 
+        {
+            alert('Something went wrong. Please try again or contact info@valuto.io.');
+        }
+    });
+
+    e.preventDefault();
+
 });
 
 function updateTables(json)

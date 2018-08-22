@@ -7,11 +7,26 @@
             "src/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [ 
+            "src/helpers.php"
+        ]
+    },
     "require": {
         "defuse/php-encryption": "^2.1",
         "league/oauth2-server": "^7.1",
         "guzzlehttp/psr7": "^1.4",
         "sentry/sentry": "^1.9",
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "predis/predis": "^1.1",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "duncan3dc/dusk": "^0.8.0",
+        "phpunit/phpunit": "^7",
+        "codedungeon/phpunit-result-printer": "^0.19.12"
     }
 }

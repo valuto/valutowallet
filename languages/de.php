@@ -190,4 +190,28 @@ You are as a user of valutowallet.com responsible for the security of your funds
     'FORM_ACTIVATION_HEADLINE' => 'Choose password',
     'FORM_ACTIVATE' => 'Activate',
 
+    // User profile
+    'WALLET_PARTICULARS' => 'Profile',
+    'WALLET_PARTICULARS_FIRST_NAME' => 'First name',
+    'WALLET_PARTICULARS_LAST_NAME' => 'Last name',
+    'WALLET_PARTICULARS_ADDRESS_1' => 'Address',
+    'WALLET_PARTICULARS_ADDRESS_2' => 'Address (second line)',
+    'WALLET_PARTICULARS_ZIP_CODE' => 'Zip code',
+    'WALLET_PARTICULARS_CITY' => 'City',
+    'WALLET_PARTICULARS_STATE' => 'State',
+    'WALLET_PARTICULARS_COUNTRY' => 'Country',
+    'WALLET_PARTICULARS_EMAIL' => 'E-mail',
+    'WALLET_PARTICULARS_PHONE_NUMBER' => 'Phone number',
+    'WALLET_PARTICULARS_UPDATE_PROFILE' => 'Update',
+    'WALLET_PARTICULARS_UPDATE_SUCCESSFUL' => 'Your profile was updated successfully.',
+    'WALLET_PARTICULARS_UPDATE_ERROR' => 'An error occurred, please try again or contact info@valuto.io.',
+
+    // Know your customer
+    'FORM_KYC_HEADLINE' => 'Information about you',
+    'FORM_KYC_EXPLANATION' => 'We are subject to the <b>Know Your Customer</b>-regulation, and therefore need to obtain more information about you to ensure that you - without knowing it - are involved in, for example, money laundering or other forms of financial crime.',
+    'FORM_KYC_USER_BLOCKED' => 'You will have to fill out the form below before you can continue.',
+    'FORM_KYC_SKIP' => 'Not now',
+    
+    // Country IP filter
+    'COUNTRY_BLOCKED' => 'Your country is not supported by Valutowallet at the moment. Please check back later or contact info@valuto.io, if you have any questions.',
 ];

@@ -27,6 +27,8 @@ $route->post('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@sto
 $route->put('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@update')->middleware('auth');
 $route->delete('auth/twofactorauth', 'Controllers\Auth\TwoFactorAuthController@destroy')->middleware('auth');
 
+$route->put('user/profile', 'Controllers\UserProfileController@update')->middleware('auth');
+
 $route->post('wallet/newaddress', 'Controllers\WalletController@newaddress')->middleware('auth');
 $route->post('wallet/withdraw', 'Controllers\WalletController@withdraw')->middleware('auth');
 
@@ -34,13 +36,21 @@ $route->get('qrcode', 'Controllers\QrcodeController@show')->middleware('auth');
 
 $route->post('auth/login', 'Controllers\Auth\LoginController@store')->middleware('recaptcha');
 $route->post('auth/logout', 'Controllers\Auth\LoginController@destroy');
-$route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware('recaptcha');
+$route->post('auth/register', 'Controllers\Auth\RegisterController@store')->middleware(['recaptcha', 'countryAllowed']);
 
 /**
  * Frontpage.
  */
 $route->get('', 'Controllers\HomeController@index');
 $route->get('index.php', 'Controllers\HomeController@redirect');
+$route->get('/country-blocked', 'Controllers\Auth\CountryBlockedController@show');
+
+/**
+ * Know Your Customer
+ */
+$route->get('kyc/status', 'Controllers\Kyc\StatusController@show');
+$route->post('kyc/skip', 'Controllers\Kyc\SkipController@store');
+$route->get('kyc', 'Controllers\Kyc\FormController@show');
 
 /**
  * API version 1.

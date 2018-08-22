@@ -19,6 +19,14 @@ class Recaptcha
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
+        // Is recaptcha disabled?
+        if (empty(config('captcha', 'secret_key'))) {
+
+            // Pass the request and response on to the next responder in the chain
+            return $next($request, $response);
+
+        }
+
         $result = json_decode(HttpClient::post('https://www.google.com/recaptcha/api/siteverify', [
             'secret'   => config('captcha', 'secret_key'),
             'response' => $_POST['g-recaptcha-response'],

@@ -3,14 +3,21 @@
 namespace Controllers;
 
 use Models\User;
-use Services\ValutoDaemon\Client;
 use Models\Flash;
+use Services\ValutoDaemon\Client;
+use Services\Tiers\KycCheck;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         global $mysqli;
+
+        $user = (new User($mysqli))->getUserByUsername($_SESSION['user_session']);
+
+        if ( ! KycCheck::isVerified($user) && ! KycCheck::reminderSkipped()) {
+            redirect('/kyc');
+        }
 
         $admin = (!empty($_SESSION['user_admin']) && $_SESSION['user_admin'] == 1);
         $error = array('type' => "none", 'message' => "");
@@ -27,7 +34,7 @@ class DashboardController extends Controller
         $transactionList = $this->client->getTransactionList();
         $twofactorenabled = isset($_SESSION['user_2fa']) && $_SESSION['user_2fa'];
 
-        $user = (new User($mysqli))->getUserByUsername($_SESSION['user_session']);
+        $selectedCountryCode = $user['country_code'];
 
         (new \Services\Bounty\Signup\User())->showBountyPending($user);
 

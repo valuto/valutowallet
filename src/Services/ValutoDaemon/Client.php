@@ -135,10 +135,12 @@ class Client {
 			throw new \Exception('User data not set in RPC client.');
 		}
 
+		$prefix = config('app', 'prefix_account_name');
+
 		if ($this->isOldAccountIdentifier()) {
-			return "zelles(" . $this->getUsername() . ")";
+			return $prefix . "zelles(" . $this->getUsername() . ")";
 		} else {
-			return "valutowallet(" . $this->getUserId() . ")";
+			return $prefix . "valutowallet(" . $this->getUserId() . ")";
 		}
 	}
 }
