@@ -38,6 +38,10 @@ class FormController extends Controller
      */
     public function show()
     {
+        if ( ! isset($_SESSION['user_id'])) {
+            return redirect('/');
+        }
+
         $user = (new User($this->mysqli))->getUserById($_SESSION['user_id']);
 
         $selectedCountryCode = $user['country_code'];
