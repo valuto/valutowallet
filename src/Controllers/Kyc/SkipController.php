@@ -40,6 +40,10 @@ class SkipController extends Controller
      */
     public function store()
     {
+        if ( ! isset($_SESSION['user_id'])) {
+            return redirect('/');
+        }
+
         $this->userRepository->skipKycReminder($_SESSION['user_id']);
 
         $_SESSION['kyc_reminder_skipped'] = time();
