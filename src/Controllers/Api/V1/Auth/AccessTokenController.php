@@ -69,12 +69,12 @@ class AccessTokenController extends Controller
         try {
         
             // Try to respond to the request
-            return $this->server->respondToAccessTokenRequest($request, $response)->getBody();
+            return $this->server->respondToAccessTokenRequest($request, $response);
             
         } catch (OAuthServerException $exception) {
-        
+
             // All instances of OAuthServerException can be formatted into a HTTP response
-            return $exception->generateHttpResponse($response)->getBody();
+            return $exception->generateHttpResponse(new Response(401));
             
         }
     }

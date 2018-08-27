@@ -162,8 +162,18 @@ class Route
     protected function callEndpoint(ServerRequestInterface $request, ResponseInterface $response, $route) {
 
         if ($route['action']) {
-            $response->getBody()->write($this->callControllerMethod($route['action'], $request));
+
+            $controllerResponse = $this->callControllerMethod($route['action'], $request);
+
+            if ($controllerResponse instanceof ResponseInterface) {
+                $response = $controllerResponse;
+            } else {
+                // Create backwards compatibility to old controllers that uses raw body response.
+                $response->getBody()->write($controllerResponse);
+            }
+
             return $response;
+
         } else {
             http_response_code(404);
             exit;
