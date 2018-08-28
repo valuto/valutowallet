@@ -16,6 +16,26 @@ $errorHandler->registerErrorHandler();
 $errorHandler->registerShutdownFunction();
 
 /**
+ * Configure session storage.
+ */
+$sessionSaveHandler = config('app', 'session_save_handler');
+$sessionSavePath    = config('app', 'session_save_path');
+if ($sessionSaveHandler) {
+    ini_set('session.save_handler', $sessionSaveHandler);
+    ini_set('session.save_path', $sessionSavePath);
+}
+
+/**
+ * Start session.
+ */
+session_start();
+
+/**
+ * Do not cache any content. It's intended for single user use.
+ */
+header('Cache-control: private');
+
+/**
  * Instantiate MySQL connection.
  */
 $mysqli = new Mysqli(config('database', 'host'), config('database', 'username'), config('database', 'password'), config('database', 'database'));

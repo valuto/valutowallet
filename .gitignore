@@ -3,3 +3,5 @@ qrgen/phpqrcode/cache
 .env
 .env.testing
 .phpunit.result.cache
+config/api.key
+config/api.pub
