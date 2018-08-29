@@ -49,7 +49,8 @@ class Reservation
             INSERT INTO 
                 reservations
             (
-                `user_id`,
+                `sender_user_id`,
+                `receiver_user_id`,
                 `amount`,
                 `origin`,
                 `reference_id`,
@@ -58,6 +59,7 @@ class Reservation
                 `updated_at`
             )
             VALUES(
+                ?,
                 ?,
                 ?,
                 ?,
@@ -73,8 +75,9 @@ class Reservation
         }
 
         $stmt->bind_param(
-            'issss',
-            $data['user_id'],
+            'iissss',
+            $data['sender_user_id'],
+            $data['receiver_user_id'],
             $data['amount'],
             $data['origin'],
             $data['reference_id'],

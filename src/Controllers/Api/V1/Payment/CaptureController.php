@@ -22,14 +22,6 @@ class CaptureController extends UserApiController
         
         $this->reserve = new Reserve();
 
-        $this->validateUserID($request);
-        
-        $user = $this->user->getUserById($this->userId);
-        
-        if ( ! $user) {
-            return $this->userNotFound();
-        }
-
         $params   = $request->getParsedBody();
         $orderId  = $params['order_id'];
         
@@ -40,11 +32,44 @@ class CaptureController extends UserApiController
         // @TODO move escrow to separate host.
         // @TODO save order id and transaction details in db.
 
+        try {
+
+            // Move amount from escrow to merchant.
+            list($valutoTransactionId, $amount) = $this->reserve->capture($reservationId);
+
+        } catch (ReservationNotFoundException $e) {
+            
+            return json_encode([
+                'status' => 'error',
+                'error' => 'reservation_not_found',
+                'message' => 'The reservation could not be found.',
+            ]);
+
+        } catch (ReservationAlreadyCapturedException $e) {
+            
+            return json_encode([
+                'status' => 'error',
+                'error' => 'already_captured',
+                'message' => 'The reservation for the order has already been captured.',
+            ]);
+
+        } catch (Exception $e) {
+
+            return json_encode([
+                'status' => 'error',
+                'error' => 'release_error',
+                'message' => 'Release of reservation failed unexpectedly.',
+            ]);
+
+        }
+
+        $state = 'in_transfer';
+
         return json_encode([
             'status' => 'success',
-            'state' => 'in_transfer',
-            'transaction_id' => 'TBD',
-            'amount' => '0.00',
+            'state' => $state,
+            'transaction_id' => $valutoTransactionId,
+            'amount' => $amount,
         ]);
     }
 }

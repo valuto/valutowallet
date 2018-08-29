@@ -10,6 +10,7 @@ use Exception;
 use Exceptions\InsufficientFundsException;
 use Exceptions\ReservationAlreadyReleasedException;
 use Exceptions\ReservationAlreadyCapturedException;
+use Exceptions\ReservationNotFoundException;
 
 class ReserveController extends UserApiController
 {
@@ -33,13 +34,13 @@ class ReserveController extends UserApiController
 
         $params   = $request->getParsedBody();
         $amount   = $params['amount'];
-        $receiver = $params['receiver'];
         $referenceId = $params['reference_id'];
+        $receiverUserId = $params['receiver_user_id'];
         
         try {
 
             // Move amount to escrow account.
-            list($valutoTransactionId, $reservationId) = $this->reserve->toEscrow($user, $amount, $referenceId);
+            list($valutoTransactionId, $reservationId, $state) = $this->reserve->toEscrow($user, $amount, $referenceId, $receiverUserId);
 
         } catch (InsufficientFundsException $e) {
 
@@ -58,8 +59,6 @@ class ReserveController extends UserApiController
             ]);
 
         }
-
-        $state = 'in_transfer';
 
         // @TODO move escrow to separate host.
 
@@ -90,15 +89,23 @@ class ReserveController extends UserApiController
 
         try {
 
-            // Move amount to escrow account.
-            list($valutoTransactionId, $amount) = $this->reserve->release($reservationId);
+            // Move amount from escrow account back to original sender.
+            list($valutoTransactionId, $amount, $state) = $this->reserve->release($reservationId);
+
+        } catch (ReservationNotFoundException $e) {
+            
+            return json_encode([
+                'status' => 'error',
+                'error' => 'reservation_not_found',
+                'message' => 'The reservation could not be found.',
+            ]);
 
         } catch (ReservationAlreadyReleasedException $e) {
             
             return json_encode([
                 'status' => 'error',
                 'error' => 'already_released',
-                'message' => 'The reservation for the order has already been released',
+                'message' => 'The reservation for the order has already been released.',
             ]);
 
         } catch (ReservationAlreadyCapturedException $e) {
@@ -106,7 +113,7 @@ class ReserveController extends UserApiController
             return json_encode([
                 'status' => 'error',
                 'error' => 'already_captured',
-                'message' => 'The reservation for the order has already been captured',
+                'message' => 'The reservation for the order has already been captured.',
             ]);
 
         } catch (Exception $e) {
@@ -114,12 +121,10 @@ class ReserveController extends UserApiController
             return json_encode([
                 'status' => 'error',
                 'error' => 'release_error',
-                'message' => 'Release of reservation failed unexpectedly',
+                'message' => 'Release of reservation failed unexpectedly.',
             ]);
 
         }
-
-        $state = 'in_transfer';
 
         return json_encode([
             'status' => 'success',

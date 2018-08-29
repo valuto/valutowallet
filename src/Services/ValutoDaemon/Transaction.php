@@ -79,7 +79,7 @@ class Transaction
         $user = $this->client->getUser();
 
         $this->transaction->create([
-            'from_user_id' => $user['id'],
+            'sender_user_id' => $user['id'],
             'valuto_transaction_id' => $valutoTransactionId,
             'comment' => '',
             'amount' => $amount,
