@@ -33,7 +33,7 @@ class Transaction
             INSERT INTO 
                 transactions
             (
-                `user_id`,
+                `from_user_id`,
                 `valuto_transaction_id`,
                 `comment`,
                 `amount`,
@@ -54,7 +54,7 @@ class Transaction
 
         $stmt->bind_param(
             'isss',
-            $data['user_id'],
+            $data['from_user_id'],
             $data['valuto_transaction_id'],
             $data['comment'],
             $data['amount']

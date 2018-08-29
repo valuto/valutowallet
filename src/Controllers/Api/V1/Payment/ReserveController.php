@@ -9,6 +9,7 @@ use Models\User;
 use Exception;
 use Exceptions\InsufficientFundsException;
 use Exceptions\ReservationAlreadyReleasedException;
+use Exceptions\ReservationAlreadyCapturedException;
 
 class ReserveController extends UserApiController
 {
@@ -90,7 +91,7 @@ class ReserveController extends UserApiController
         try {
 
             // Move amount to escrow account.
-            list($valutoTransactionId, $reservationId) = $this->reserve->release($reservationId);
+            list($valutoTransactionId, $amount) = $this->reserve->release($reservationId);
 
         } catch (ReservationAlreadyReleasedException $e) {
             
@@ -98,6 +99,14 @@ class ReserveController extends UserApiController
                 'status' => 'error',
                 'error' => 'already_released',
                 'message' => 'The reservation for the order has already been released',
+            ]);
+
+        } catch (ReservationAlreadyCapturedException $e) {
+            
+            return json_encode([
+                'status' => 'error',
+                'error' => 'already_captured',
+                'message' => 'The reservation for the order has already been captured',
             ]);
 
         } catch (Exception $e) {
@@ -112,15 +121,11 @@ class ReserveController extends UserApiController
 
         $state = 'in_transfer';
 
-        // @TODO move escrow to separate host.
-
         return json_encode([
             'status' => 'success',
             'state' => $state,
-            'sender' => $user['id'],
             'transaction_id' => $valutoTransactionId,
             'amount' => $amount,
-            'reservation_id' => $reservationId,
         ]);
     }
 

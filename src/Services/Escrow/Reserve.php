@@ -108,26 +108,6 @@ class Reserve
     }
 
     /**
-     * Update reservation in database.
-     * 
-     * @param  int     $reservationId
-     * @param  string  $state
-     * @return boolean
-     */
-    public function update($reservationId, $state)
-    {
-        $this->reservation->update([
-            'user_id' => $reservationId,
-            'state' => $state,
-        ]);
-
-        $reservationId = $this->mysqli->insert_id;
-
-        return $reservationId;
-    }
-
-
-    /**
      * Save transaction details in database.
      * 
      * @param  int     $reservationId
@@ -194,6 +174,13 @@ class Reserve
             throw new ReservationAlreadyReleasedException('The reservation has already been released.');
         }
 
+        if ($reservation['state'] === 'captured') {
+            throw new ReservationAlreadyCapturedException('The reservation has already been captured.');
+        }
+
+        // @TODO update reservation status for reservation, i.e. check if it is still in_transfer or if it actually received in the (escrow) wallet account.
+        // throw error if not completed yet
+
         $address = $this->getReceivingAddress($user);
         $escrowUser = $this->getEscrowUser();
 
@@ -202,13 +189,14 @@ class Reserve
         // Withdraw from wallet.
         list($valutoTransactionId, $transactionId) = $this->transaction->setClient($this->client)->withdraw($address, $reservation['amount']);
         
-        // Update state of reservation.
-        $reservationId = $this->update($reservationId, 'released');
         $transactionId = $this->attachTransaction($reservationId, $transactionId, 'released');
+
+        // Update state of reservation.
+        $this->reservation->updateState($reservationId, 'released');
 
         return [
             $valutoTransactionId,
-            $reservationId,
+            $reservation['amount'],
         ];
     }
 

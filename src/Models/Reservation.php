@@ -87,4 +87,36 @@ class Reservation
         return $result;
     }
 
+    /**
+     * Update state in model.
+     * 
+     * @param array $data
+     */
+    public function updateState($reservationId, $state)
+    {
+        $stmt = $this->mysqli->prepare("
+            UPDATE
+                reservations
+            SET
+                `state` = ?,
+                `updated_at` = NOW()
+            WHERE
+                id = ?");
+
+        if (!$stmt) {
+            dd($this->mysqli->error);
+            return false;
+        }
+
+        $stmt->bind_param(
+            'si',
+            $state,
+            $reservationId
+        );
+
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
 }
