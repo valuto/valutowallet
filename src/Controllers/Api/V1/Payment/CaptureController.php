@@ -18,6 +18,8 @@ class CaptureController extends UserApiController
      */
     public function store(ServerRequestInterface $request)
     {
+        // @TODO add scope check, so only vlumarketsystem user can perform this action.
+        
         $this->reserve = new Reserve();
 
         $this->validateUserID($request);

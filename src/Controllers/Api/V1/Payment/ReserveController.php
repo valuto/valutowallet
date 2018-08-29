@@ -7,6 +7,8 @@ use Controllers\Api\V1\UserApiController;
 use Services\Escrow\Reserve;
 use Models\User;
 use Exception;
+use Exceptions\InsufficientFundsException;
+use Exceptions\ReservationAlreadyReleasedException;
 
 class ReserveController extends UserApiController
 {
@@ -23,7 +25,7 @@ class ReserveController extends UserApiController
         $this->validateUserID($request);
         
         $user = $this->user->getUserById($this->userId);
-        
+
         if ( ! $user) {
             return $this->userNotFound();
         }
@@ -31,54 +33,94 @@ class ReserveController extends UserApiController
         $params   = $request->getParsedBody();
         $amount   = $params['amount'];
         $receiver = $params['receiver'];
-        $orderId  = $params['order_id'];
+        $referenceId = $params['reference_id'];
         
-        $this->client->setUser($user);
+        try {
 
-        $noresbal   = $this->client->getBalance();
-        $resbalance = $this->client->getBalance() - config('app', 'reserve');
+            // Move amount to escrow account.
+            list($valutoTransactionId, $reservationId) = $this->reserve->toEscrow($user, $amount, $referenceId);
 
-        if ($amount > $resbalance) {
+        } catch (InsufficientFundsException $e) {
+
             return json_encode([
                 'status' => 'error',
                 'error' => 'insufficient_funds',
                 'message' => 'The account has insufficient funds',
             ]);
+
+        } catch (Exception $e) {
+
+            return json_encode([
+                'status' => 'error',
+                'error' => 'reservation_error',
+                'message' => 'Reservation failed unexpectedly',
+            ]);
+
         }
-        
-        $escrowUser = $this->reserve->getEscrowUser();
 
-        // Move amount to escrow account.
-        $transactionId = $this->reserve->withdrawFromUser($escrowUser, $user, $amount);
+        $state = 'in_transfer';
 
-        // @TODO determine state of transfer.
         // @TODO move escrow to separate host.
-        // @TODO save order id and transaction details in db.
 
         return json_encode([
             'status' => 'success',
-            'state' => 'in_transfer',
+            'state' => $state,
             'sender' => $user['id'],
-            'transaction_id' => $transactionId,
+            'transaction_id' => $valutoTransactionId,
             'amount' => $amount,
+            'reservation_id' => $reservationId,
         ]);
     }
 
     /**
-     * Release order from user.
+     * Release reserved amount from user.
      * 
      * @param ServerRequestInterface  $request  the request object.
      * @return 
      */
     public function destroy(ServerRequestInterface $request)
     {
-        // @TODO
+        // @TODO add scope check, so only vlumarketsystem user can perform this action.
+
+        $this->reserve = new Reserve();
+
+        $params = $request->getParsedBody();
+        $reservationId = $params['reservation_id'];
+
+        try {
+
+            // Move amount to escrow account.
+            list($valutoTransactionId, $reservationId) = $this->reserve->release($reservationId);
+
+        } catch (ReservationAlreadyReleasedException $e) {
+            
+            return json_encode([
+                'status' => 'error',
+                'error' => 'already_released',
+                'message' => 'The reservation for the order has already been released',
+            ]);
+
+        } catch (Exception $e) {
+
+            return json_encode([
+                'status' => 'error',
+                'error' => 'release_error',
+                'message' => 'Release of reservation failed unexpectedly',
+            ]);
+
+        }
+
+        $state = 'in_transfer';
+
+        // @TODO move escrow to separate host.
 
         return json_encode([
             'status' => 'success',
-            'state' => 'in_transfer',
-            'transaction_id' => 'TBD',
-            'amount' => '0.00',
+            'state' => $state,
+            'sender' => $user['id'],
+            'transaction_id' => $valutoTransactionId,
+            'amount' => $amount,
+            'reservation_id' => $reservationId,
         ]);
     }
 

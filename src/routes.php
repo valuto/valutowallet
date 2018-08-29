@@ -65,7 +65,7 @@ $route->put('api/v1/user/profile', 'Controllers\Api\V1\UserProfileController@upd
 $route->get('api/v1/user/twofactor', 'Controllers\Api\V1\Auth\UserTwofactorController@enabled')->middleware('apiauth'); // uses user access token
 $route->post('api/v1/user/twofactor', 'Controllers\Api\V1\Auth\UserTwofactorController@verify')->middleware('apiauth'); // uses user access token
 $route->get('api/v1/user/account', 'Controllers\Api\V1\UserAccountController@show')->middleware('apiauth'); // uses user access token
-$route->post('api/v1/payment/reserve', 'Controllers\Api\V1\Payment\ReserveController@store')->middleware('apiauth'); // uses user access token
-$route->post('api/v1/payment/release', 'Controllers\Api\V1\Payment\ReserveController@destroy')->middleware('apiauth'); // uses user access token
-$route->post('api/v1/payment/capture', 'Controllers\Api\V1\Payment\CaptureController@store')->middleware('apiauth'); // uses user access token
+$route->post('api/v1/payment/reserve', 'Controllers\Api\V1\Payment\ReserveController@store')->middleware('apiauth');
+$route->post('api/v1/payment/release', 'Controllers\Api\V1\Payment\ReserveController@destroy')->middleware('apiauth');
+$route->post('api/v1/payment/capture', 'Controllers\Api\V1\Payment\CaptureController@store')->middleware('apiauth');
 $route->post('api/v1/cashback', 'Controllers\Api\V1\Payment\CashbackController@store')->middleware('apiauth'); 

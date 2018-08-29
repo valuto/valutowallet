@@ -2,8 +2,8 @@
 
 namespace Services\ValutoDaemon;
 
-class Client {
-
+class Client
+{
 	/**
 	 * RPC URI.
 	 * 
@@ -50,6 +50,16 @@ class Client {
 		$this->user = $user;
 
 		return $this;
+	}
+
+	/**
+	 * Get user.
+	 * 
+	 * @return array $user
+	 */
+	public function getUser()
+	{
+		return $this->user;
 	}
 
 	public function getBalance()
