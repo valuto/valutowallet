@@ -116,7 +116,7 @@ class Reserve
      */
     public function update($reservationId, $state)
     {
-        $this->reservation->create([
+        $this->reservation->update([
             'user_id' => $reservationId,
             'state' => $state,
         ]);
