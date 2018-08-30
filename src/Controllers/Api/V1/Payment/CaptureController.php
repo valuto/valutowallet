@@ -4,9 +4,14 @@ namespace Controllers\Api\V1\Payment;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Controllers\Api\V1\UserApiController;
-use Services\Escrow\Reserve;
+use Services\Payment\Reserve;
 use Models\User;
+
 use Exception;
+use Exceptions\AccessDeniedException;
+use Exceptions\ReservationAlreadyCapturedException;
+use Exceptions\ReservationNotFoundException;
+use Exceptions\ReservationNotCapturableStateException;
 
 class CaptureController extends UserApiController
 {
@@ -22,19 +27,13 @@ class CaptureController extends UserApiController
         
         $this->reserve = new Reserve();
 
-        $params   = $request->getParsedBody();
-        $orderId  = $params['order_id'];
-        
-        $escrowUser = $this->reserve->getEscrowUser();
+        $params = $request->getParsedBody();
+        $reservationId  = $params['reservation_id'];
 
-        // @TODO pay merchant from escrow account.
-        // @TODO determine state of transfer.
-        // @TODO move escrow to separate host.
-        // @TODO save order id and transaction details in db.
+        $escrowUser = $this->reserve->getEscrowUser();
 
         try {
 
-            // Move amount from escrow to merchant.
             list($valutoTransactionId, $amount) = $this->reserve->capture($reservationId);
 
         } catch (ReservationNotFoundException $e) {
@@ -50,7 +49,15 @@ class CaptureController extends UserApiController
             return json_encode([
                 'status' => 'error',
                 'error' => 'already_captured',
-                'message' => 'The reservation for the order has already been captured.',
+                'message' => 'The reservation has already been captured.',
+            ]);
+
+        } catch (ReservationNotCapturableStateException $e) {
+            
+            return json_encode([
+                'status' => 'error',
+                'error' => 'reservation_not_capturable',
+                'message' => 'The reservation is not in a capturable state.',
             ]);
 
         } catch (Exception $e) {
@@ -62,8 +69,6 @@ class CaptureController extends UserApiController
             ]);
 
         }
-
-        $state = 'in_transfer';
 
         return json_encode([
             'status' => 'success',

@@ -4,7 +4,7 @@ namespace Controllers\Api\V1\Payment;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Controllers\Api\V1\UserApiController;
-use Services\Escrow\Reserve;
+use Services\Payment\Reserve;
 use Models\User;
 use Exception;
 use Exceptions\InsufficientFundsException;

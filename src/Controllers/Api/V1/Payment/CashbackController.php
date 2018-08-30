@@ -4,7 +4,7 @@ namespace Controllers\Api\V1\Payment;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Controllers\Controller;
-use Services\Escrow\Reserve;
+use Services\Payment\Cashback;
 use Models\User;
 use Exception;
 
@@ -20,18 +20,25 @@ class CashbackController extends Controller
     {
         // @TODO add scope check, so only vlumarketsystem user can perform this action.
 
-        $this->reserve = new Reserve();
+        $this->cashback = new Cashback();
 
-        $params     = $request->getParsedBody();
-        $orderId    = $params['order_id'];
+        $params = $request->getParsedBody();
+        $reservationId = $params['reservation_id'];
         $percentage = $params['percentage'];
-        
-        //$escrowUser = $this->reserve->getEscrowUser();
 
-        // @TODO pay merchant from escrow account.
-        // @TODO determine state of transfer.
-        // @TODO move escrow to separate host.
-        // @TODO save order id and transaction details in db.
+        try {
+            
+            list($valutoTransactionId, $transactionId) = $this->cashback->pay($reservationId, $percentage);
+
+        } catch (Exception $e) {
+
+            return json_encode([
+                'status' => 'error',
+                'error' => 'cashback_error',
+                'message' => 'Cashback payment failed unexpectedly',
+            ]);
+
+        }
 
         return json_encode([
             'status' => 'success',

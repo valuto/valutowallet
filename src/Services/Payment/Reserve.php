@@ -1,21 +1,26 @@
 <?php
 
-namespace Services\Escrow;
+namespace Services\Payment;
 
 use Factories\ClientFactory;
 use Models\User;
 use Models\Reservation;
 use Models\ReservationTransaction;
 use Services\ValutoDaemon\Transaction;
+use Traits\ReservationServiceTrait;
+
 use Exception;
 use Exceptions\InsufficientFundsException;
 use Exceptions\AccessDeniedException;
 use Exceptions\ReservationAlreadyReleasedException;
 use Exceptions\ReservationAlreadyCapturedException;
 use Exceptions\ReservationNotFoundException;
+use Exceptions\ReservationNotCapturableStateException;
 
 class Reserve
 {
+    use ReservationServiceTrait;
+
     /**
      * The database instance.
      * 
@@ -112,34 +117,13 @@ class Reserve
     }
 
     /**
-     * Save transaction details in database.
-     * 
-     * @param  int     $reservationId
-     * @param  string  $transactionId
-     * @param  string  $action
-     * @return boolean
-     */
-    public function attachTransaction($reservationId, $transactionId, $action)
-    {
-        $this->reservationTransaction->create([
-            'reservation_id' => $reservationId,
-            'transaction_id' => $transactionId,
-            'action' => $action,
-        ]);
-
-        $reservationTransactionId = $this->mysqli->insert_id;
-
-        return $reservationTransactionId;
-    }
-
-    /**
      * Withdraw order amount from user account and move to escrow.
      * 
      * @param  array  $sender
      * @param  float  $amount
      * @param  string $referenceId
      * @param  int $receiverUserId
-     * @return boolean
+     * @return array
      */
     public function toEscrow($sender, $amount, $referenceId, $receiverUserId)
     {
@@ -168,7 +152,8 @@ class Reserve
     /**
      * Release a reserved payment.
      * 
-     * @param 
+     * @param int $reservationId
+     * @return array
      */
     public function release($reservationId)
     {
@@ -218,9 +203,11 @@ class Reserve
 
 
     /**
-     * Capture a reserved payment.
+     * Capture a reserved payment, i.e. send most of it to the receiver 
+     * and a small cut to the owner.
      * 
-     * @param 
+     * @param int $reservationId
+     * @return array
      */
     public function capture($reservationId)
     {
@@ -233,52 +220,63 @@ class Reserve
             throw new ReservationNotFoundException('The reservation could not be found.');
         }
 
-        $user = $this->user->getUserById($reservation['sender_user_id']);
-
-        if ($reservation['state'] === 'released') {
-            throw new ReservationAlreadyReleasedException('The reservation has already been released.');
-        }
-
         if ($reservation['state'] === 'captured') {
             throw new ReservationAlreadyCapturedException('The reservation has already been captured.');
         }
 
         // @TODO update reservation status for reservation, i.e. check if it is still in_transfer or if it actually received in the (escrow) wallet account.
         // throw error if not completed yet, as escrow account should not pay something they have not received yet.
+        // For now we fake state of reservation:
+        $reservation['state'] = 'in_escrow';
 
-        $address = $this->getReceivingAddress($user);
-        $escrowUser = $this->getEscrowUser();
+        if ($reservation['state'] !== 'in_escrow') {
+            throw new ReservationNotCapturableStateException('The reservation is not in a capturable state.');
+        }
 
-        $this->client->setUser($escrowUser);
+        // @TODO set cut in database for authorised client instead of this hardcoded value.
+        $cut = 0.05;
 
-        // Withdraw from wallet.
-        list($valutoTransactionId, $transactionId) = $this->transaction->setClient($this->client)->withdraw($address, $reservation['amount']);
-        
-        $transactionId = $this->attachTransaction($reservationId, $transactionId, 'released');
+        list($amountToReceiver, $amountToOwner) = $this->calculateCaptureAmounts($reservation['amount'], $cut);
+
+        list($valutoTransactionId, $transactionId) = $this->toReceiver($amountToReceiver, $reservation);
+        // $this->toOwner($amountToOwner); @TODO 
 
         // Update state of reservation.
-        $this->reservation->updateState($reservationId, 'released');
+        $this->reservation->updateState($reservationId, 'captured');
 
         return [
             $valutoTransactionId,
-            $reservation['amount'],
+            $amountToReceiver,
         ];
     }
 
     /**
-     * Get the escrow user.
+     * Withdraw from escrow and transfer to receiving user.
      * 
+     * @param  float  $amount
+     * @param  array $reservation
      * @return array
      */
-    public function getEscrowUser()
-    {        
-        $escrowAccount = env('API_ESCROW_USER_ID', false);
+    public function toReceiver($amount, $reservation)
+    {
+        // Receiving address.
+        $receiver = $this->user->getUserById($reservation['receiver_user_id']);
+        $address = $this->getReceivingAddress($receiver);
+     
+        // Set sender user.
+        $escrowUser = $this->getEscrowUser();   
+        $this->client->setUser($escrowUser);
 
-        if ( ! $escrowAccount) {
-            throw new Exception('Escrow account not specified.');
-        }
+        // Withdraw from wallet.
+        list($valutoTransactionId, $transactionId) = $this->transaction->setClient($this->client)->withdraw($address, $amount);
+        
+        // Persist transaction details to database.
+        $transactionId = $this->attachTransaction($reservation['id'], $transactionId, 'from_escrow_to_receiver_initiated');
 
-        return $this->user->getUserById($escrowAccount);
+        return [
+            $valutoTransactionId,
+            $transactionId,
+        ];
     }
     
     /**
@@ -299,20 +297,31 @@ class Reserve
     }
 
     /**
-     * Get receiving address for user.
+     * Calculate amount to be transferred to receiver and owner on capture.
      * 
-     * @param  array  $escrowUser  the receiving user.
-     * @return string
+     * @param decimal $total
+     * @param float $cut
+     * @return array
      */
-    protected function getReceivingAddress($receiver)
+    protected function calculateCaptureAmounts($total, $cut)
     {
-        $address = $this->clientReceiver->setUser($receiver)->getNewAddress();
+        $amountToReceiver = bcmul($reservation['amount'], (1-$cut), 8);
+        $amountToOwner = bcsub($amount, $amountToReceiver, 8);
 
-        if (empty($address)) {
-            throw new Exception('New address could not be created for receiving user.');
+        // Account for the remainder (alternative to using 
+        // non-precise floor() and ceil() functions).
+        $remainder = bcsub($amount, bcadd($amountToReceiver, $amountToOwner));
+
+        if ($remainder > 0) {
+            $amountToReceiver = bcadd($amountToReceiver, $remainder);
+        } else {
+            $amountToOwner = bcsub($amountToOwner, $remainder);
         }
 
-        return $address;
+        return [
+            $amountToReceiver,
+            $amountToOwner,
+        ];
     }
 
 }
