@@ -28,7 +28,7 @@ class CashbackController extends Controller
 
         try {
             
-            list($valutoTransactionId, $transactionId) = $this->cashback->pay($reservationId, $percentage);
+            list($valutoTransactionId, $transactionId, $state, $amount) = $this->cashback->pay($reservationId, $percentage);
 
         } catch (Exception $e) {
 
@@ -42,9 +42,9 @@ class CashbackController extends Controller
 
         return json_encode([
             'status' => 'success',
-            'state' => 'in_transfer',
-            'transaction_id' => 'TBD',
-            'amount' => '0.00',
+            'state' => $state,
+            'transaction_id' => $transactionId,
+            'amount' => $amount,
         ]);
     }
 }

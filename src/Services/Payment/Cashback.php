@@ -95,13 +95,19 @@ class Cashback
         // @TODO check if there already exists a cashback transaction related to this reservation.
         // throw exception if there does.
 
+        $reservation = $this->reservation->find($reservationId);
+
         $amount = bcmul($reservation['amount'], $percentage, 8);
 
-        list($valutoTransactionId, $transactionId) = $this->toUser($amount, $reservation['sender_user_id']);
+        list($valutoTransactionId, $transactionId) = $this->toUser($amount, $reservation['sender_user_id'], $reservationId);
+
+        $state = 'in_transfer'; // @TODO
 
         return [
             $valutoTransactionId,
             $transactionId,
+            $state,
+            $amount,
         ];
     }
 
@@ -112,7 +118,7 @@ class Cashback
      * @param  int $userId
      * @return array
      */
-    public function toUser($amount, $userId)
+    public function toUser($amount, $userId, $reservationId)
     {
         // Receiving address.
         $receiver = $this->user->getUserById($userId);

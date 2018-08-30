@@ -34,7 +34,7 @@ class CaptureController extends UserApiController
 
         try {
 
-            list($valutoTransactionId, $amount) = $this->reserve->capture($reservationId);
+            list($valutoTransactionId, $amount, $state) = $this->reserve->capture($reservationId);
 
         } catch (ReservationNotFoundException $e) {
             

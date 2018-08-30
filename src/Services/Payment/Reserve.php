@@ -241,12 +241,15 @@ class Reserve
         list($valutoTransactionId, $transactionId) = $this->toReceiver($amountToReceiver, $reservation);
         // $this->toOwner($amountToOwner); @TODO 
 
+        $state = 'captured';
+
         // Update state of reservation.
-        $this->reservation->updateState($reservationId, 'captured');
+        $this->reservation->updateState($reservationId, $state);
 
         return [
             $valutoTransactionId,
             $amountToReceiver,
+            $state,
         ];
     }
 
@@ -305,12 +308,12 @@ class Reserve
      */
     protected function calculateCaptureAmounts($total, $cut)
     {
-        $amountToReceiver = bcmul($reservation['amount'], (1-$cut), 8);
-        $amountToOwner = bcsub($amount, $amountToReceiver, 8);
+        $amountToReceiver = bcmul($total, (1-$cut), 8);
+        $amountToOwner = bcsub($total, $amountToReceiver, 8);
 
         // Account for the remainder (alternative to using 
         // non-precise floor() and ceil() functions).
-        $remainder = bcsub($amount, bcadd($amountToReceiver, $amountToOwner));
+        $remainder = bcsub($total, bcadd($amountToReceiver, $amountToOwner));
 
         if ($remainder > 0) {
             $amountToReceiver = bcadd($amountToReceiver, $remainder);
