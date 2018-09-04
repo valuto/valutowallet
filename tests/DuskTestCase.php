@@ -3,11 +3,9 @@
 namespace Tests;
 
 use duncan3dc\Laravel\Dusk;
-use PHPUnit\Framework\TestCase;
-use Dotenv\Dotenv;
+use Tests\TestCase;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
-use Mysqli;
 use Models\User;
 use Repositories\Database\UserRepository;
 use Services\Tiers\TierLevel;
@@ -31,49 +29,7 @@ class DuskTestCase extends TestCase
         parent::__construct();
 
         $this->browser = new Dusk;
-
-        $this->browser->setBaseUrl('http://valutowallet.testing');
-
-        $this->loadTestingEnvironmentFile();
-        $this->loadDatabase();
-        $this->feedServerVariables();
-    }
-
-    /**
-     * Override dotenv file with testing configuration.
-     * 
-     * @return void
-     */
-    protected function loadTestingEnvironmentFile()
-    {
-        global $dotenv;
-        $dotenv = new Dotenv(__DIR__ . '/../', '.env.testing');
-        $dotenv->load();
-    }
-
-    /**
-     * Instantiate MySQL connection.
-     * 
-     * @return void
-     */
-    protected function loadDatabase()
-    {
-        $this->mysqli = new Mysqli(
-            config('database', 'host'), 
-            config('database', 'username'), 
-            config('database', 'password'), 
-            config('database', 'database')
-        );
-    }
-
-    /**
-     * Feed $_SERVER global with data.
-     * 
-     * @return void
-     */
-    protected function feedServerVariables()
-    {
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->browser->setBaseUrl($this->baseUrl);
     }
     
     /**
@@ -107,6 +63,12 @@ class DuskTestCase extends TestCase
         ];
     }
 
+    /**
+     * KYC verify a new user, so the user can access the dashboard.
+     * 
+     * @param int $userId
+     * @return void
+     */
     protected function kycVerifyUser($userId)
     {
         $userRepository = new UserRepository($this->mysqli);
