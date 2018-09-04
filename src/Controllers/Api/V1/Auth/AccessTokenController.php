@@ -21,6 +21,9 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use Router\Request;
 use DateInterval;
+use Exceptions\ClientNotFoundException;
+use Exceptions\ClientSecretIncorrectException;
+use Exceptions\GrantTypeNotAllowedException;
 
 class AccessTokenController extends Controller
 {
@@ -76,6 +79,21 @@ class AccessTokenController extends Controller
             // All instances of OAuthServerException can be formatted into a HTTP response
             return $exception->generateHttpResponse(new Response(401));
             
+        } catch (ClientNotFoundException $exception) {
+
+            // All instances of ClientNotFoundException can be formatted into a HTTP response
+            return $exception->generateHttpResponse(new Response(401));
+            
+        } catch (ClientSecretIncorrectException $exception) {
+
+            // All instances of ClientSecretIncorrectException can be formatted into a HTTP response
+            return $exception->generateHttpResponse(new Response(401));
+
+        } catch (GrantTypeNotAllowedException $exception) {
+
+            // All instances of ClientSecretIncorrectException can be formatted into a HTTP response
+            return $exception->generateHttpResponse(new Response(401));
+
         }
     }
 
