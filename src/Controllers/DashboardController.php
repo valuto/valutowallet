@@ -6,6 +6,7 @@ use Models\User;
 use Models\Flash;
 use Services\ValutoDaemon\Client;
 use Services\Tiers\KycCheck;
+use Services\Vlumarket\TrendingProducts;
 
 class DashboardController extends Controller
 {
@@ -35,6 +36,8 @@ class DashboardController extends Controller
         $twofactorenabled = isset($_SESSION['user_2fa']) && $_SESSION['user_2fa'];
 
         $selectedCountryCode = $user['country_code'];
+
+        $vlumarketProducts = TrendingProducts::get();
 
         (new \Services\Bounty\Signup\User())->showBountyPending($user);
 

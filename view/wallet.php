@@ -24,12 +24,13 @@ if ($admin)
 }
 ?>
 
-<div class="row top-banner-row">
- <div class="col-md-12"><img style="max-width: 100%; margin-bottom: 50px;" src="/assets/img/NewFeatures_Nonretina.jpg" srcset="/assets/img/NewFeatures_retina.jpg 3x" />
- </div>
-</div>
-
 <div id="vueapp">
+
+    <div class="row market-products-row">
+        <div class="col-md-12">
+            <product-slider vlumarket-base-url="<?php echo env('VLU_MARKET_URL'); ?>" :products='<?php echo $vlumarketProducts; ?>'></product-slider>
+        </div>
+    </div>
 
   <section class="col-md-12" id="walletOverview" v-show="showtab === 'wallet'">
     <h1><?php echo lang('WALLET_OVERVIEW_HEADLINE'); ?></h1>
@@ -530,3 +531,6 @@ function updateTables(json)
 }
 
 </script>
+
+<?php include __DIR__ . '/parts/product_slider_product_template.php'; ?>
+<?php include __DIR__ . '/parts/product_slider_template.php'; ?>

@@ -27,7 +27,7 @@
 
         </footer>
 
-        <script src="/assets/js/vue.min.js"></script>
+        <script src="/assets/js/vue.js"></script>
         <?php if (!empty($_SESSION['user_session'])): ?>
         <script src="/assets/js/vueapp.js"></script>
         <?php endif; ?>
