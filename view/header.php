@@ -11,10 +11,10 @@
 
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/assets/css/wallet.css?v=5" rel="stylesheet">
+        <link href="/assets/css/wallet.css?v=6" rel="stylesheet">
         <link href="/assets/css/disclaimer.css?v=3" rel="stylesheet">
 		<link href="/assets/css/languages.min.css" rel="stylesheet">
-		<link href="/assets/css/product_slider.css" rel="stylesheet">
+		<link href="/assets/css/product_slider.css?v=3" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600" rel="stylesheet">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
