@@ -11,7 +11,7 @@
                     <a v-bind:href="'/vlumarket/redirect?url=' + vlumarketBaseUrl + '/' + product.category.slug + '/' + product.slug">{{ product.subject }}</a>
                 </h1>
                 <div class="orange-container">
-                    NOW <span>EUR</span> {{ product.price }}
+                    <span class="pre-price">ONLY</span> <span>EUR</span> {{ product.price }}
                 </div>
             </div>
         </div>

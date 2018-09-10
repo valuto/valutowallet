@@ -62,7 +62,7 @@
                         font-size: 2.5rem;
                         font-weight: 600;
     
-                        > span {
+                        > span:not(.pre-price) {
                             font-size: 1.5rem;
                         }
     
@@ -94,4 +94,26 @@
         right: 30px;
     }
 
+}
+
+@media (max-width: 767px) {
+    .product-slider .inner > .product:first-child {
+        width: 100%;
+    }
+    .product-slider .inner > .product:first-child .pre-price,
+    .product-slider .inner > .product:not(:first-child) {
+        display: none;
+    }
+
+    .product-slider .arrow-left img,
+    .product-slider .arrow-right img {
+        width: 40px;
+    }
+    
+    .product-slider .arrow-left {
+        left: 20px;
+    }
+    .product-slider .arrow-right {
+        right: 20px;
+    }
 }

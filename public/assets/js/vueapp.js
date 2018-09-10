@@ -49,11 +49,26 @@ Vue.component('product-slider', {
                 this.indexThree = this.products.length-1;
             }
 
-            console.log(this.indexOne, this.indexTwo, this.indexThree);
-
             this.rotateProducts();
         },
         next: function () {
+            
+            this.indexOne++;
+            this.indexTwo++;
+            this.indexThree++;
+
+            if (this.indexOne > this.products.length-1) {
+                this.indexOne = 0;
+            }
+
+            if (this.indexTwo > this.products.length-1) {
+                this.indexTwo = 0;
+            }
+
+            if (this.indexThree > this.products.length-1) {
+                this.indexThree = 0;
+            }
+
             this.rotateProducts();
         },
         rotateProducts: function() {

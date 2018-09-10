@@ -5,7 +5,7 @@ if ($error && !empty($error['message'])) {
 ?>
 
 <?php if(\Models\Flash::has('showNotice')): ?>
-<section class="col-md-12" id="walletMessage" style="margin-bottom: 50px !important; background-color: #f29400; color: #fff;">
+<section class="col-md-12" id="walletMessage" style="margin-bottom: 30px !important; background-color: #f29400; color: #fff;">
     <strong><?php echo lang('WALLET_NOTICE'); ?></strong>&nbsp;&nbsp;<?php echo \Models\Flash::show('showNotice'); ?>
 </section>
 <?php endif; ?>
