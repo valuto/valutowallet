@@ -7,6 +7,8 @@ use GuzzleHttp\Exception\ServerException;
 
 class TrendingProducts
 {
+    protected static $emptyResponse = [];
+
     public static function get()
     {
         // @TODO add cache
@@ -18,16 +20,22 @@ class TrendingProducts
                 'connect_timeout' => 4,
             ]);
         } catch (ClientException $e) {
-            return '[]';
+            return self::$emptyResponse;
         } catch (ServerException $e) {
-            return '[]';
+            return self::$emptyResponse;
         }
 
         if ($res->getStatusCode() !== 200) {
-            return '[]';
+            return self::$emptyResponse;
         }
 
-        return (string)$res->getBody();
+        $body = json_decode((string)$res->getBody());
+
+        if (self::jsonFailed()) {
+            return self::$emptyResponse;
+        }
+
+        return $body;
     }
 
     private static function jsonFailed()
