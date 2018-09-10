@@ -3,6 +3,7 @@
 namespace Services\Vlumarket;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 class TrendingProducts
 {
@@ -17,6 +18,8 @@ class TrendingProducts
                 'connect_timeout' => 4,
             ]);
         } catch (ClientException $e) {
+            return '[]';
+        } catch (ServerException $e) {
             return '[]';
         }
 
