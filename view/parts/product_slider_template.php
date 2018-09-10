@@ -1,5 +1,5 @@
 <script type="text/x-template" id="product-slider-template">
-    <div class="product-slider">
+    <div class="product-slider" v-show="products.length">
         <div class="inner">
 
             <product-slider-product :product="productOne" :vlumarketBaseUrl="vlumarketBaseUrl" v-show="products.length > 0"></product-slider-product>
