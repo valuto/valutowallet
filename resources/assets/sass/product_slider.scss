@@ -99,6 +99,8 @@
 @media (max-width: 767px) {
     .product-slider .inner > .product:first-child {
         width: 100%;
+        padding-left: 0;
+        padding-right: 0;
     }
     .product-slider .inner > .product:first-child .pre-price,
     .product-slider .inner > .product:not(:first-child) {
@@ -111,9 +113,9 @@
     }
     
     .product-slider .arrow-left {
-        left: 20px;
+        left: 10px;
     }
     .product-slider .arrow-right {
-        right: 20px;
+        right: 10px;
     }
 }
