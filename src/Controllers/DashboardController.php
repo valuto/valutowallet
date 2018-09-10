@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         $selectedCountryCode = $user['country_code'];
 
-        $vlumarketProducts = TrendingProducts::get()->data;
+        $vlumarketProducts = TrendingProducts::get();
 
         (new \Services\Bounty\Signup\User())->showBountyPending($user);
 

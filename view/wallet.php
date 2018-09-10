@@ -28,7 +28,7 @@ if ($admin)
 
     <div class="row market-products-row">
         <div class="col-md-12">
-            <product-slider vlumarket-base-url="<?php echo env('VLU_MARKET_URL'); ?>" :products='<?php echo json_encode($vlumarketProducts); ?>'></product-slider>
+            <product-slider vlumarket-base-url="<?php echo env('VLU_MARKET_URL'); ?>" :products='<?php echo json_encode(empty($vlumarketProducts) ? [] : $vlumarketProducts->data); ?>'></product-slider>
         </div>
     </div>
 
