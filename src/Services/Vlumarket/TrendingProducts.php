@@ -4,6 +4,7 @@ namespace Services\Vlumarket;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\ConnectException;
 
 class TrendingProducts
 {
@@ -23,6 +24,9 @@ class TrendingProducts
             return self::$emptyResponse;
         } catch (ServerException $e) {
             return self::$emptyResponse;
+        } catch (ConnectException $e) {
+            return self::$emptyResponse;
+            
         }
 
         if ($res->getStatusCode() !== 200) {
