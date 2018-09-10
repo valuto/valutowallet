@@ -8,7 +8,7 @@
         <div class="under" v-on:click="gotoProduct()">
             <div class="under-inner">
                 <h1>
-                    <a v-bind:href="vlumarketBaseUrl + '/' + product.category.slug + '/' + product.slug">{{ product.subject }}</a>
+                    <a v-bind:href="'/vlumarket/redirect?url=' + vlumarketBaseUrl + '/' + product.category.slug + '/' + product.slug">{{ product.subject }}</a>
                 </h1>
                 <div class="orange-container">
                     NOW <span>EUR</span> {{ product.price }}

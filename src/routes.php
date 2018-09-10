@@ -53,6 +53,11 @@ $route->post('kyc/skip', 'Controllers\Kyc\SkipController@store');
 $route->get('kyc', 'Controllers\Kyc\FormController@show');
 
 /**
+ * VLU Market outbound
+ */
+$route->get('vlumarket/redirect', 'Controllers\Vlumarket\RedirectWithAuthController@show')->middleware('auth');
+
+/**
  * API version 1.
  */
 $route->post('api/v1/access-token', 'Controllers\Api\V1\Auth\AccessTokenController@store');

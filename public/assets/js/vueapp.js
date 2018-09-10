@@ -4,13 +4,10 @@ Vue.component('product-slider-product', {
         'product',
         'vlumarketBaseUrl',
     ],
-    created: function() {
-
-    },
     methods: {
         gotoProduct: function() {
-            window.location.href = '/' + this.product.category.slug + '/' + this.product.slug;
-        }
+            window.location.href = '/vlumarket/redirect?url=' + this.vlumarketBaseUrl + '/' + this.product.category.slug + '/' + this.product.slug;
+        },
     }
 });
 
@@ -58,9 +55,6 @@ Vue.component('product-slider', {
         },
         next: function () {
             this.rotateProducts();
-        },
-        gotoProduct: function() {
-            window.location.href = '/' + this.product.category.slug + '/' + this.product.slug;
         },
         rotateProducts: function() {
 
